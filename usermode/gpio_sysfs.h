@@ -27,28 +27,16 @@ private:
     std::string m_value;
 };
 
-enum direction_t {
-    dir_input,
-    dir_output
-};
-
-enum edge_t {
-    edge_none
-};
-
-enum value_t {
-    value_low,
-    value_high
-};
-
-class pin {
+class sysfs_pin {
 public:
-    explicit pin(unsigned number);
-    ~pin();
+    explicit sysfs_pin(unsigned number);
+    ~sysfs_pin();
 
     bool accessible() const;
     bool readable() const;
     bool writable() const;
+
+    unsigned number() const;
 
     std::string label() const;
     direction_t direction() const;
@@ -93,13 +81,10 @@ template<
                 is_pin_def<T>::value,
                 bool>::type = 0
 >
-pin make_pin() {
-    return pin(T::NUMBER);
+sysfs_pin make_sysfs_pin() {
+    return sysfs_pin(T::NUMBER);
 }
 
 }
 
-std::ostream& operator<<(std::ostream& os, const bbb::gpio::direction_t& dir);
-std::ostream& operator<<(std::ostream& os, const bbb::gpio::edge_t& edge);
-std::ostream& operator<<(std::ostream& os, const bbb::gpio::value_t& value);
-std::ostream& operator<<(std::ostream& os, const bbb::gpio::pin& pin);
+std::ostream& operator<<(std::ostream& os, const bbb::gpio::sysfs_pin& pin);

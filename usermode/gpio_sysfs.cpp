@@ -9,45 +9,49 @@
 
 namespace bbb::gpio {
 
-pin::pin(unsigned number)
+sysfs_pin::sysfs_pin(unsigned number)
     : m_number(number) {
     if (!accessible()) {
         export_pin(m_number);
     }
 }
 
-pin::~pin() {
+sysfs_pin::~sysfs_pin() {
     if (accessible()) {
         unexport_pin(m_number);
     }
 }
 
-bool pin::accessible() const {
+bool sysfs_pin::accessible() const {
     char path[PATH_MAX] = {0};
     sprintf(path, SYSFS_FILE_FORMAT, m_number, "");
 
     return 0 == access(path, F_OK);
 }
 
-bool pin::readable() const {
+bool sysfs_pin::readable() const {
     char path[PATH_MAX] = {0};
     sprintf(path, SYSFS_FILE_FORMAT, m_number, "");
 
     return 0 == access(path, R_OK);
 }
 
-bool pin::writable() const {
+bool sysfs_pin::writable() const {
     char path[PATH_MAX] = {0};
     sprintf(path, SYSFS_FILE_FORMAT, m_number, "");
 
     return 0 == access(path, W_OK);
 }
 
-std::string pin::label() const {
+unsigned sysfs_pin::number() const {
+    return m_number;
+}
+
+std::string sysfs_pin::label() const {
     return read(FILE_LABEL);
 }
 
-direction_t pin::direction() const {
+direction_t sysfs_pin::direction() const {
     std::string value = read(FILE_DIRECTION);
     if (DIRECTION_INPUT == value) {
         return dir_input;
@@ -58,7 +62,7 @@ direction_t pin::direction() const {
     }
 }
 
-edge_t pin::edge() const {
+edge_t sysfs_pin::edge() const {
     std::string value = read(FILE_EDGE);
     if (EDGE_NONE == value) {
         return edge_none;
@@ -67,7 +71,7 @@ edge_t pin::edge() const {
     }
 }
 
-value_t pin::value() const {
+value_t sysfs_pin::value() const {
     std::string value = read(FILE_VALUE);
     if (VALUE_LOW == value) {
         return value_low;
@@ -78,7 +82,7 @@ value_t pin::value() const {
     }
 }
 
-void pin::direction(direction_t direction) {
+void sysfs_pin::direction(direction_t direction) {
     switch (direction) {
         case dir_input:
             write(FILE_DIRECTION, DIRECTION_INPUT);
@@ -89,7 +93,7 @@ void pin::direction(direction_t direction) {
     }
 }
 
-void pin::edge(edge_t edge) {
+void sysfs_pin::edge(edge_t edge) {
     switch (edge) {
         case edge_none:
             write(FILE_EDGE, EDGE_NONE);
@@ -97,7 +101,7 @@ void pin::edge(edge_t edge) {
     }
 }
 
-void pin::value(value_t value) {
+void sysfs_pin::value(value_t value) {
     switch (value) {
         case value_low:
             write(FILE_VALUE, VALUE_LOW);
@@ -108,7 +112,7 @@ void pin::value(value_t value) {
     }
 }
 
-std::string pin::read(const char* file) const {
+std::string sysfs_pin::read(const char* file) const {
     char path[PATH_MAX] = {0};
     sprintf(path, SYSFS_FILE_FORMAT, m_number, file);
 
@@ -121,7 +125,7 @@ std::string pin::read(const char* file) const {
     return value;
 }
 
-void pin::write(const char* file, const std::string& value) {
+void sysfs_pin::write(const char* file, const std::string& value) {
     char path[PATH_MAX] = {0};
     sprintf(path, SYSFS_FILE_FORMAT, m_number, file);
 
@@ -131,14 +135,14 @@ void pin::write(const char* file, const std::string& value) {
     stream << value;
 }
 
-void pin::export_pin(unsigned number) {
+void sysfs_pin::export_pin(unsigned number) {
     std::ofstream stream(SYSFS_EXPORT);
     stream.exceptions(std::ifstream::failbit);
 
     stream << number;
 }
 
-void pin::unexport_pin(unsigned number) {
+void sysfs_pin::unexport_pin(unsigned number) {
     std::ofstream stream(SYSFS_UNEXPORT);
     stream.exceptions(std::ifstream::failbit);
 
@@ -147,42 +151,19 @@ void pin::unexport_pin(unsigned number) {
 
 }
 
-std::ostream& operator<<(std::ostream& os, const bbb::gpio::direction_t& dir) {
-    switch (dir) {
-        case bbb::gpio::direction_t::dir_input: os << "in"; break;
-        case bbb::gpio::direction_t::dir_output: os << "out"; break;
-    }
-
-    return os;
-}
-
-std::ostream& operator<<(std::ostream& os, const bbb::gpio::edge_t& edge) {
-    switch (edge) {
-        case bbb::gpio::edge_t::edge_none: os << "none"; break;
-    }
-
-    return os;
-}
-
-std::ostream& operator<<(std::ostream& os, const bbb::gpio::value_t& value) {
-    switch (value) {
-        case bbb::gpio::value_t::value_low: os << "low"; break;
-        case bbb::gpio::value_t::value_high: os << "high"; break;
-    }
-
-    return os;
-}
-
-std::ostream& operator<<(std::ostream& os, const bbb::gpio::pin& pin) {
-    os << "PIN: " << std::endl;
+std::ostream& operator<<(std::ostream& os, const bbb::gpio::sysfs_pin& pin) {
+    os << "PIN: " << std::endl
+        << "\tnumber: " << pin.number();
 
     if (pin.readable()) {
-        os  << "\tlabel: " << pin.label() << std::endl
+        os << std::endl
+            << "\tlabel: " << pin.label() << std::endl
             << "\tdirection: " << pin.direction() << std::endl
             << "\tedge: " << pin.edge() << std::endl
             << "\tvalue: " << pin.value();
     } else {
-        os << "\tNo read access";
+        os << std::endl
+            << "\tNo read access";
     }
 
     return os;

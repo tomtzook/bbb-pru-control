@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ostream>
+
 
 #define PIN_NUMBER(module, index) ((module) * 32 + (index))
 
@@ -89,6 +91,20 @@
 
 
 namespace bbb::gpio {
+
+enum direction_t {
+    dir_input,
+    dir_output
+};
+
+enum edge_t {
+    edge_none
+};
+
+enum value_t {
+    value_low,
+    value_high
+};
 
 template<unsigned module, unsigned index>
 struct pin_def {
@@ -185,3 +201,7 @@ using p9_41b = pin_def<3, P9_41B>;
 using p9_42b = pin_def<3, P9_42B>;
 
 }
+
+std::ostream& operator<<(std::ostream& os, const bbb::gpio::direction_t& dir);
+std::ostream& operator<<(std::ostream& os, const bbb::gpio::edge_t& edge);
+std::ostream& operator<<(std::ostream& os, const bbb::gpio::value_t& value);
