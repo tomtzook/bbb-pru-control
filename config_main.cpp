@@ -1,16 +1,21 @@
-
+#include <unistd.h>
 #include <iostream>
 
-#include <gpio_config.h>
+#include <gpio_sysfs.h>
 
 
 int main() {
-    auto pin = bbb::gpio::make_pin<bbb::gpio::p8_31>();
+    auto led = bbb::gpio::make_pin<bbb::gpio::usr3>();
 
-    pin.direction(bbb::gpio::dir_output);
-    pin.value(bbb::gpio::value_low);
+    led.direction(bbb::gpio::dir_output);
 
-    std::cout << pin << std::endl;
+    led.value(bbb::gpio::value_low);
+    for (int i = 0; i < 10; ++i) {
+        led.value(bbb::gpio::value_high);
+        usleep(500000);
+        led.value(bbb::gpio::value_low);
+        usleep(500000);
+    }
 
     return 0;
 }
