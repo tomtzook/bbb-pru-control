@@ -12,8 +12,13 @@ add_subdirectory(common)
 add_subdirectory(rp)
 add_subdirectory(uio)
 
+add_subdirectory(usermode)
+
 add_executable(uio_host_test uio_main.cpp)
 target_link_libraries(uio_host_test PRIVATE pruuio)
 
 add_executable(rp_host_test rp_main.cpp)
 target_link_libraries(rp_host_test PRIVATE prurp)
+
+add_executable(config_host_test config_main.cpp)
+target_link_libraries(config_host_test PRIVATE bbb_usermode)

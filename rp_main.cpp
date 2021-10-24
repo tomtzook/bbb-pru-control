@@ -1,7 +1,14 @@
 #include <unistd.h>
 #include <iostream>
-#include <prurp.h>
 
+#include <prurp.h>
+#include <rpmsg.h>
+
+
+struct message {
+    unsigned int count;
+    bool overflow;
+};
 
 int main() {
     pru::rp::pru pru(pru::rp::pru0);
@@ -17,10 +24,29 @@ int main() {
     std::cout << "Starting PRU..." << std::endl;
     pru.start();
 
-    auto pru0_dram = pru.dram<unsigned int>();
-    for (int i = 0; i < 10; ++i) {
-        std::cout << "READ: " << pru0_dram[0] << std::endl;
-        usleep(1000 * 500);
+    try {
+        auto pru0_dram = pru.dram<unsigned int>();
+        pru::rp::channel channel(pru0_dram[0]);
+
+        for (int i = 0; i < 10; ++i) {
+            std::cout << "Sending message" << std::endl;
+
+            std::string msg = "hello";
+            channel << msg;
+
+            channel >> msg;
+
+            auto m = reinterpret_cast<const message*>(msg.c_str());
+            std::cout << "Received message: " << m->count
+                << " (overflow " << m->overflow << ")"
+                << std::endl;
+        }
+
+    } catch (...) {
+        std::cerr << "ERROR:"
+            << " is_running=" << pru.is_running()
+            << " "
+            << std::endl;
     }
 
     std::cout << "Done..." << std::endl;
