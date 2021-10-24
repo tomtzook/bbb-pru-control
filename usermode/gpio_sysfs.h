@@ -19,6 +19,10 @@ public:
         return m_value;
     }
 
+    virtual const char* what() const noexcept override {
+        return "Bad value";
+    }
+
 private:
     std::string m_value;
 };
@@ -40,6 +44,11 @@ enum value_t {
 class pin {
 public:
     explicit pin(unsigned number);
+    ~pin();
+
+    bool accessible() const;
+    bool readable() const;
+    bool writable() const;
 
     std::string label() const;
     direction_t direction() const;
@@ -50,7 +59,13 @@ public:
     void edge(edge_t edge);
     void value(value_t value);
 
+    static void export_pin(unsigned number);
+    static void unexport_pin(unsigned number);
+
 private:
+    static constexpr const char* SYSFS_EXPORT = "/sys/class/gpio/export";
+    static constexpr const char* SYSFS_UNEXPORT = "/sys/class/gpio/unexport";
+
     static constexpr const char* SYSFS_FILE_FORMAT = "/sys/class/gpio/gpio%d/%s";
 
     static constexpr const char* FILE_LABEL = "label";
@@ -84,4 +99,7 @@ pin make_pin() {
 
 }
 
+std::ostream& operator<<(std::ostream& os, const bbb::gpio::direction_t& dir);
+std::ostream& operator<<(std::ostream& os, const bbb::gpio::edge_t& edge);
+std::ostream& operator<<(std::ostream& os, const bbb::gpio::value_t& value);
 std::ostream& operator<<(std::ostream& os, const bbb::gpio::pin& pin);
