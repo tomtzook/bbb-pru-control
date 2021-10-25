@@ -27,7 +27,7 @@ private:
     std::string m_value;
 };
 
-class sysfs_pin {
+class sysfs_pin : public pin {
 public:
     explicit sysfs_pin(unsigned number);
     ~sysfs_pin();
@@ -39,13 +39,13 @@ public:
     unsigned number() const;
 
     std::string label() const;
-    direction_t direction() const;
+    direction_t direction() const override;
     edge_t edge() const;
-    value_t value() const;
+    value_t value() const override;
 
-    void direction(direction_t direction);
+    void direction(direction_t direction) override;
     void edge(edge_t edge);
-    void value(value_t value);
+    void value(value_t value) override;
 
     static void export_pin(unsigned number);
     static void unexport_pin(unsigned number);

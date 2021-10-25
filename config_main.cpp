@@ -9,44 +9,26 @@
 #include <mem/pwmss.h>
 
 
+static void test_led(bbb::gpio::pin& led) {
+    led.direction(bbb::gpio::dir_output);
+
+    led.value(bbb::gpio::value_low);
+    for (int i = 0; i < 10; ++i) {
+        led.value(bbb::gpio::value_high);
+        usleep(500000);
+        led.value(bbb::gpio::value_low);
+        usleep(500000);
+    }
+}
+
 int main() {
     //auto led = bbb::gpio::make_sysfs_pin<bbb::gpio::usr3>();
 
     auto& gpio = bbb::gpio::module<bbb::gpio::gpio1>();
     std::cout << "GPIO: " << gpio << std::endl;
 
-    auto usr0 = bbb::gpio::make_direct_pin<bbb::gpio::usr0>();
-    auto usr1 = bbb::gpio::make_direct_pin<bbb::gpio::usr1>();
-    auto usr2 = bbb::gpio::make_direct_pin<bbb::gpio::usr2>();
     auto usr3 = bbb::gpio::make_direct_pin<bbb::gpio::usr3>();
-
-    usr0.direction(bbb::gpio::dir_output);
-    usr1.direction(bbb::gpio::dir_output);
-    usr2.direction(bbb::gpio::dir_output);
-    usr3.direction(bbb::gpio::dir_output);
-
-    usr0.value(bbb::gpio::value_low);
-    usr1.value(bbb::gpio::value_low);
-    usr2.value(bbb::gpio::value_low);
-    usr3.value(bbb::gpio::value_low);
-
-    for (int i = 0; i < 10; ++i) {
-        usr0.value(bbb::gpio::value_high);
-        usr1.value(bbb::gpio::value_high);
-        usr2.value(bbb::gpio::value_high);
-        usr3.value(bbb::gpio::value_high);
-
-        usleep(500000);
-
-        usr0.value(bbb::gpio::value_low);
-        usr1.value(bbb::gpio::value_low);
-        usr2.value(bbb::gpio::value_low);
-        usr3.value(bbb::gpio::value_low);
-
-        usleep(500000);
-    }
-
-
+    test_led(usr3);
 
     /*auto& pwmss_module = bbb::pwmss::_global_pwmss_modules[0];
     //auto clk_status = pwmss_module.read_reg<bbb::pwmss::module_reg::register_clkstatus>();

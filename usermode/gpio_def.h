@@ -109,6 +109,15 @@ enum value_t {
     value_high
 };
 
+class pin {
+public:
+    virtual direction_t direction() const = 0;
+    virtual value_t value() const = 0;
+
+    virtual void direction(direction_t direction) = 0;
+    virtual void value(value_t value) = 0;
+};
+
 template<unsigned module, unsigned index>
 struct pin_def {
     static constexpr unsigned MODULE = module;

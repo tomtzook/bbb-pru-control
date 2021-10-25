@@ -122,17 +122,15 @@ public:
     }
 };
 
-class direct_pin {
+class direct_pin : public pin {
 public:
     direct_pin(module_peripheral& module, unsigned mask);
 
-    direction_t direction() const;
-    edge_t edge() const;
-    value_t value() const;
+    direction_t direction() const override;
+    value_t value() const override;
 
-    void direction(direction_t direction);
-    void edge(edge_t edge);
-    void value(value_t value);
+    void direction(direction_t direction) override;
+    void value(value_t value) override;
 
 private:
     volatile gpio_data* m_module_ctrl;

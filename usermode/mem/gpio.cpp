@@ -30,10 +30,6 @@ direction_t direct_pin::direction() const {
     }
 }
 
-edge_t direct_pin::edge() const {
-    return edge_none;
-}
-
 value_t direct_pin::value() const {
     unsigned int reg_value;
     switch (direction()) {
@@ -61,10 +57,6 @@ void direct_pin::direction(direction_t direction) {
     }
 }
 
-void direct_pin::edge(edge_t edge) {
-
-}
-
 void direct_pin::value(value_t value) {
     switch (value) {
         case value_low:
@@ -74,7 +66,6 @@ void direct_pin::value(value_t value) {
             m_module_ctrl->setdataout |= m_mask;
             break;
     }
-    
 }
 
 }
@@ -103,7 +94,6 @@ std::ostream& operator<<(std::ostream& os, const bbb::gpio::module_peripheral& m
 std::ostream& operator<<(std::ostream& os, const bbb::gpio::direct_pin& pin) {
     os
         << "\tdirection: " << pin.direction() << std::endl
-        << "\tedge: " << pin.edge() << std::endl
         << "\tvalue: " << pin.value();
 
     return os;

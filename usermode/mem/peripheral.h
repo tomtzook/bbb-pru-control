@@ -4,16 +4,6 @@
 #include <exception>
 
 
-#define DEFINE_STRUCT_CTORS(name) \
-    name() = default;      \
-    name(const name& other) \
-        : data(other.data)   \
-    {}                      \
-    name(const volatile name& other) \
-        : data(other.data)                      \
-    {}
-
-
 namespace bbb {
 
 class module_access_exception : std::exception {
@@ -64,12 +54,7 @@ public:
                     bool>::type = 0
     >
     volatile typename T::TYPE* data(size_t offset=0) {
-        if (nullptr == m_base) {
-            throw module_access_exception();
-        }
-
-        return reinterpret_cast<volatile typename T::TYPE*>(
-                reinterpret_cast<volatile char*>(m_base) + T::OFFSET);
+        return raw<typename T::TYPE>(T::OFFSET);
     }
 
     template<
@@ -79,49 +64,36 @@ public:
                     bool>::type = 0
     >
     const volatile typename T::TYPE* data(size_t offset=0) const {
-        if (nullptr == m_base) {
-            throw module_access_exception();
-        }
-
-        return reinterpret_cast<const volatile typename T::TYPE*>(
-                reinterpret_cast<const volatile char*>(m_base) + T::OFFSET);
+        return raw<typename T::TYPE>(T::OFFSET);
     }
 
     template<typename T>
     T read(size_t offset=0) const {
-        if (nullptr == m_base) {
-            throw module_access_exception();
-        }
-
-        return *reinterpret_cast<volatile T*>(
-                reinterpret_cast<volatile char*>(m_base) + offset);
+        return *raw<T>(offset);
     }
 
     template<typename T>
     inline void write(T value, size_t offset=0) {
-        if (nullptr == m_base) {
-            throw module_access_exception();
-        }
-
-        *reinterpret_cast<volatile T*>(
-                reinterpret_cast<volatile char*>(m_base) + offset) = value;
+        *raw<T>(offset) = value;
     }
 
-    template<typename T>
+    template<
+            typename T,
+            typename std::enable_if<
+                    is_reg<T>::value,
+                    bool>::type = 0
+    >
     inline typename T::TYPE read_reg() const {
-        if (nullptr == m_base) {
-            throw module_access_exception();
-        }
-
         return read<typename T::TYPE>(T::OFFSET);
     }
 
-    template<typename T>
+    template<
+            typename T,
+            typename std::enable_if<
+                    is_reg<T>::value,
+                    bool>::type = 0
+    >
     inline void write_reg(typename T::TYPE value) {
-        if (nullptr == m_base) {
-            throw module_access_exception();
-        }
-
         write(value, T::OFFSET);
     }
 
