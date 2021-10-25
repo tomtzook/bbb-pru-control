@@ -17,14 +17,13 @@ module_peripheral::module_peripheral(size_t address) noexcept
     : peripheral(address, MODULE_CTRL_SIZE) {
 }
 
-direct_pin::direct_pin(module_peripheral* module, unsigned mask)
-    : m_module(module)
+direct_pin::direct_pin(module_peripheral& module, unsigned mask)
+    : m_module_ctrl(module.operator->())
     , m_mask(mask) {
 }
 
 direction_t direct_pin::direction() const {
-    auto value = m_module->read_reg<module_peripheral::register_oe>();
-    if (value & m_mask) {
+    if (m_module_ctrl->oe & m_mask) {
         return dir_input;
     } else {
         return dir_output;
@@ -39,10 +38,10 @@ value_t direct_pin::value() const {
     unsigned int reg_value;
     switch (direction()) {
         case dir_input:
-            reg_value = m_module->read_reg<module_peripheral::register_datain>();
+            reg_value = m_module_ctrl->datain;
             break;
         case dir_output:
-            reg_value = m_module->read_reg<module_peripheral::register_dataout>();
+            reg_value = m_module_ctrl->dataout;
             break;
     }
 
@@ -52,16 +51,12 @@ value_t direct_pin::value() const {
 }
 
 void direct_pin::direction(direction_t direction) {
-    auto value = m_module->read_reg<module_peripheral::register_oe>();
-
     switch (direction) {
         case dir_input:
-            value |= m_mask;
-            m_module->write_reg<module_peripheral::register_oe>(value);
+            m_module_ctrl->oe |= m_mask;
             break;
         case dir_output:
-            value &= ~m_mask;
-            m_module->write_reg<module_peripheral::register_oe>(value);
+            m_module_ctrl->oe &= ~m_mask;
             break;
     }
 }
@@ -71,18 +66,12 @@ void direct_pin::edge(edge_t edge) {
 }
 
 void direct_pin::value(value_t value) {
-    unsigned int reg_value;
-
     switch (value) {
         case value_low:
-            reg_value = m_module->read_reg<module_peripheral::register_cleardataout>();
-            reg_value |= m_mask;
-            m_module->write_reg<module_peripheral::register_cleardataout>(reg_value);
+            m_module_ctrl->cleardataout |= m_mask;
             break;
         case value_high:
-            reg_value = m_module->read_reg<module_peripheral::register_setdataout>();
-            reg_value |= m_mask;
-            m_module->write_reg<module_peripheral::register_setdataout>(reg_value);
+            m_module_ctrl->setdataout |= m_mask;
             break;
     }
 }
@@ -90,26 +79,22 @@ void direct_pin::value(value_t value) {
 }
 
 std::ostream& operator<<(std::ostream& os, const bbb::gpio::module_peripheral& module_peripheral) {
-    auto idver = module_peripheral.read_reg<bbb::gpio::module_peripheral::register_idver>();
-    auto sysconfig = module_peripheral.read_reg<bbb::gpio::module_peripheral::register_sysconfig>();
-    auto ctrl = module_peripheral.read_reg<bbb::gpio::module_peripheral::register_ctrl>();
-
     os
         << "idver: " << std::endl
-        << "\tminor=" << std::hex << idver.bits.minor << std::endl
-        << "\tcustom=" << std::hex << idver.bits.custom << std::endl
-        << "\tmajor=" << std::hex << idver.bits.major << std::endl
-        << "\trtl=" << std::hex << idver.bits.rtl << std::endl
-        << "\tfunc=" << std::hex << idver.bits.func << std::endl
-        << "\tscheme=" << std::hex << idver.bits.scheme << std::endl
+        << "\tminor=" << std::hex << module_peripheral->idver.bits.minor << std::endl
+        << "\tcustom=" << std::hex << module_peripheral->idver.bits.custom << std::endl
+        << "\tmajor=" << std::hex << module_peripheral->idver.bits.major << std::endl
+        << "\trtl=" << std::hex << module_peripheral->idver.bits.rtl << std::endl
+        << "\tfunc=" << std::hex << module_peripheral->idver.bits.func << std::endl
+        << "\tscheme=" << std::hex << module_peripheral->idver.bits.scheme << std::endl
         << "sysconfig:" << std::endl
-        << "\tauto_idle=" << std::hex << sysconfig.bits.auto_idle << std::endl
-        << "\tena_wakeup=" << std::hex << sysconfig.bits.ena_wakeup << std::endl
-        << "\tena_wakeup=" << std::hex << sysconfig.bits.ena_wakeup << std::endl
-        << "\tidle_mode=" << std::hex << sysconfig.bits.idle_mode << std::endl
+        << "\tauto_idle=" << std::hex << module_peripheral->sysconfig.bits.auto_idle << std::endl
+        << "\tena_wakeup=" << std::hex << module_peripheral->sysconfig.bits.ena_wakeup << std::endl
+        << "\tena_wakeup=" << std::hex << module_peripheral->sysconfig.bits.ena_wakeup << std::endl
+        << "\tidle_mode=" << std::hex << module_peripheral->sysconfig.bits.idle_mode << std::endl
         << "ctrl:" << std::endl
-        << "\tdisable_module=" << std::hex << ctrl.bits.disable_module << std::endl
-        << "\tgating_ratio=" << std::hex << ctrl.bits.gating_ratio;
+        << "\tdisable_module=" << std::hex << module_peripheral->ctrl.bits.disable_module << std::endl
+        << "\tgating_ratio=" << std::hex << module_peripheral->ctrl.bits.gating_ratio;
 
     return os;
 }

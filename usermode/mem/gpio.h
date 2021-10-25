@@ -23,112 +23,108 @@ using gpio1 = module_def<1, 0x4804c000>;
 using gpio2 = module_def<2, 0x481ac000>;
 using gpio3 = module_def<3, 0x481ae000>;
 
-union iprevision {
-    uint32_t data;
-    struct {
-        uint32_t minor : 6;
-        uint32_t custom : 2;
-        uint32_t major : 3;
-        uint32_t rtl : 5;
-        uint32_t func : 12;
-        uint32_t reserved0 : 2;
-        uint32_t scheme : 2;
-    } bits;
+#pragma pack(push, 1)
 
-    DEFINE_STRUCT_CTORS(iprevision)
+struct gpio_module {
+    volatile union {
+        volatile uint32_t data;
+        volatile struct {
+            uint32_t minor : 6;
+            uint32_t custom : 2;
+            uint32_t major : 3;
+            uint32_t rtl : 5;
+            uint32_t func : 12;
+            uint32_t reserved0 : 2;
+            uint32_t scheme : 2;
+        } bits;
+    } idver;
+    uint8_t reserved0[0xc];
+    volatile union {
+        enum idle_mode_t : uint32_t {
+            idle_mode_force = 0x0,
+            idle_mode_no = 0x1,
+            idle_mode_smart = 0x2,
+            idle_mode_smart_wakeup = 0x3
+        };
+
+        volatile uint32_t data;
+        volatile struct {
+            uint32_t auto_idle : 1;
+            uint32_t softreset : 1;
+            uint32_t ena_wakeup : 1;
+            idle_mode_t idle_mode : 2;
+        } bits;
+    } sysconfig;
+    uint8_t reserved1[0xc];
+    volatile union {
+        volatile uint32_t data;
+        volatile struct {
+            uint32_t dma_event_ack : 1;
+        } bits;
+    } eoi;
+    volatile uint32_t irqstatus_raw0;
+    volatile uint32_t irqstatus_raw1;
+    volatile uint32_t irqstatus0;
+    volatile uint32_t irqstatus1;
+    volatile uint32_t irqstatus_set0;
+    volatile uint32_t irqstatus_set1;
+    volatile uint32_t irqstatus_clr0;
+    volatile uint32_t irqstatus_clr1;
+    volatile uint32_t irqwaken0;
+    volatile uint32_t irqwaken1;
+    uint8_t reserved2[0xc8];
+    volatile uint32_t sysstatus;
+    uint8_t reserved3[0x18];
+    volatile union {
+        volatile uint32_t data;
+        volatile struct {
+            uint32_t disable_module : 1;
+            uint32_t gating_ratio : 2;
+        } bits;
+    } ctrl;
+    volatile uint32_t oe;
+    volatile uint32_t datain;
+    volatile uint32_t dataout;
+    volatile uint32_t leveldetect0;
+    volatile uint32_t leveldetect1;
+    volatile uint32_t risingdetect;
+    volatile uint32_t fallingdetect;
+    volatile uint32_t debouncingenable;
+    volatile union {
+        volatile uint32_t data;
+        volatile struct {
+            uint32_t debouncingtime : 8;
+        } bits;
+    } debouncingtime;
+    uint8_t reserved5[0x38];
+    volatile uint32_t cleardataout;
+    volatile uint32_t setdataout;
 };
-static_assert(sizeof(iprevision) == 4, "iprevision");
 
-union sysconfig {
-    enum idle_mode_t : uint32_t {
-        idle_mode_force = 0x0,
-        idle_mode_no = 0x1,
-        idle_mode_smart = 0x2,
-        idle_mode_smart_wakeup = 0x3
-    };
-
-    uint32_t data;
-    struct {
-        uint32_t auto_idle : 1;
-        uint32_t softreset : 1;
-        uint32_t ena_wakeup : 1;
-        uint32_t idle_mode : 2;
-    } bits;
-
-    DEFINE_STRUCT_CTORS(sysconfig)
-};
-static_assert(sizeof(sysconfig) == 4, "sysconfig");
-
-union eoi {
-    uint32_t data;
-    struct {
-        uint32_t dma_event_ack : 1;
-    } bits;
-
-    DEFINE_STRUCT_CTORS(eoi)
-};
-static_assert(sizeof(eoi) == 4, "eoi");
-
-union ctrl {
-    uint32_t data;
-    struct {
-        uint32_t disable_module : 1;
-        uint32_t gating_ratio : 2;
-    } bits;
-
-    DEFINE_STRUCT_CTORS(ctrl)
-};
-static_assert(sizeof(ctrl) == 4, "ctrl");
-
-union debouncingtime {
-    uint32_t data;
-    struct {
-        uint32_t debouncingtime : 8;
-    } bits;
-
-    DEFINE_STRUCT_CTORS(debouncingtime)
-};
-static_assert(sizeof(debouncingtime) == 4, "debouncingtime");
+#pragma pack(pop)
 
 class module_peripheral : public peripheral {
 public:
     static constexpr size_t MODULE_CTRL_SIZE = 0x1000;
 
-    using register_idver = reg<0x0, iprevision>;
-    using register_sysconfig = reg<0x10, sysconfig>;
-    using register_eoi = reg<0x20, eoi>;
-    using register_irqstatus_raw0 = reg<0x24, uint32_t>;
-    using register_irqstatus_raw1 = reg<0x28, uint32_t>;
-    using register_irqstatus0 = reg<0x2c, uint32_t>;
-    using register_irqstatus1 = reg<0x30, uint32_t>;
-    using register_irqstatus_set0 = reg<0x34, uint32_t>;
-    using register_irqstatus_set1 = reg<0x38, uint32_t>;
-    using register_irqstatus_clr0 = reg<0x3c, uint32_t>;
-    using register_irqstatus_clr1 = reg<0x40, uint32_t>;
-    using register_irqwaken0 = reg<0x44, uint32_t>;
-    using register_irqwaken1 = reg<0x48, uint32_t>;
-    using register_sysstatus = reg<0x114, uint32_t>;
-    using register_ctrl = reg<0x130, ctrl>;
-    using register_oe = reg<0x134, uint32_t>;
-    using register_datain = reg<0x138, uint32_t>;
-    using register_dataout = reg<0x13c, uint32_t>;
-    using register_leveldetect0 = reg<0x140, uint32_t>;
-    using register_leveldetect1 = reg<0x144, uint32_t>;
-    using register_risingdetect = reg<0x148, uint32_t>;
-    using register_fallingdetect = reg<0x14c, uint32_t>;
-    using register_debouncenable = reg<0x150, uint32_t>;
-    using register_debouncingtime = reg<0x154, debouncingtime>;
-    using register_cleardataout = reg<0x190, uint32_t>;
-    using register_setdataout = reg<0x194, uint32_t>;
+    using register_all = reg<0x0, gpio_module>;
 
     explicit module_peripheral(size_t address) noexcept;
     module_peripheral(const module_peripheral& other) = delete;
     ~module_peripheral() override = default;
+
+    volatile gpio_module* operator->() {
+        return peripheral::data<register_all>();
+    }
+
+    const volatile gpio_module* operator->() const {
+        return peripheral::data<register_all>();
+    }
 };
 
 class direct_pin {
 public:
-    direct_pin(module_peripheral* module, unsigned mask);
+    direct_pin(module_peripheral& module, unsigned mask);
 
     direction_t direction() const;
     edge_t edge() const;
@@ -139,7 +135,7 @@ public:
     void value(value_t value);
 
 private:
-    module_peripheral* m_module;
+    volatile gpio_module* m_module_ctrl;
     unsigned m_mask;
 };
 
@@ -163,7 +159,7 @@ template<
                 bool>::type = 0
 >
 direct_pin make_direct_pin() {
-    return direct_pin(_global_gpio_modules + T::MODULE, 1u << T::INDEX);
+    return direct_pin(_global_gpio_modules[T::MODULE], 1u << T::INDEX);
 }
 #endif
 

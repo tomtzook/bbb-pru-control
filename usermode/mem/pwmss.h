@@ -99,7 +99,7 @@ union clkstatus {
 };
 static_assert(sizeof(clkstatus) == 4, "clkstatus");
 
-union tbctl {
+union epwm_tbctl {
     enum ctr_mode_t : uint16_t {
         ctrmode_up_count = 0x0,
         ctrmode_down_count = 0x1,
@@ -152,11 +152,11 @@ union tbctl {
         free_soft_t free_soft : 2;
     } bits;
 
-    DEFINE_STRUCT_CTORS(tbctl)
+    DEFINE_STRUCT_CTORS(epwm_tbctl)
 };
-static_assert(sizeof(tbctl) == 2, "tbctl");
+static_assert(sizeof(epwm_tbctl) == 2, "tbctl");
 
-union tbsts {
+union epwm_tbsts {
     uint16_t data;
     struct {
         uint16_t ctrdir : 1;
@@ -164,22 +164,22 @@ union tbsts {
         uint16_t ctrmax : 1;
     } bits;
 
-    DEFINE_STRUCT_CTORS(tbsts)
+    DEFINE_STRUCT_CTORS(epwm_tbsts)
 };
-static_assert(sizeof(tbsts) == 2, "tbsts");
+static_assert(sizeof(epwm_tbsts) == 2, "tbsts");
 
-union tbphshr {
+union epwm_tbphshr {
     uint16_t data;
     struct {
         uint16_t reserved0 : 8;
         uint16_t tbphsh : 8;
     } bits;
 
-    DEFINE_STRUCT_CTORS(tbphshr)
+    DEFINE_STRUCT_CTORS(epwm_tbphshr)
 };
-static_assert(sizeof(tbphshr) == 2, "tbphshr");
+static_assert(sizeof(epwm_tbphshr) == 2, "tbphshr");
 
-union cmpctl {
+union epwm_cmpctl {
     enum active_ctr_mode_t : uint16_t {
         active_mode_load_0 = 0x0,
         active_mode_load_prd = 0x1,
@@ -198,22 +198,22 @@ union cmpctl {
         uint16_t shdw_b_full : 1;
     } bits;
 
-    DEFINE_STRUCT_CTORS(cmpctl)
+    DEFINE_STRUCT_CTORS(epwm_cmpctl)
 };
-static_assert(sizeof(cmpctl) == 2, "cmpctl");
+static_assert(sizeof(epwm_cmpctl) == 2, "cmpctl");
 
-union cmpahr {
+union epwm_cmpahr {
     uint16_t data;
     struct {
         uint16_t reserved0 : 8;
         uint16_t cmpahr : 8;
     } bits;
 
-    DEFINE_STRUCT_CTORS(cmpahr)
+    DEFINE_STRUCT_CTORS(epwm_cmpahr)
 };
-static_assert(sizeof(cmpahr) == 2, "cmpahr");
+static_assert(sizeof(epwm_cmpahr) == 2, "cmpahr");
 
-union aqctl {
+union epwm_aqctl {
     enum action_t : uint16_t {
         action_disabled = 0x0,
         action_clear = 0x1,
@@ -231,11 +231,11 @@ union aqctl {
         action_t cbd : 2;
     } bits;
 
-    DEFINE_STRUCT_CTORS(aqctl)
+    DEFINE_STRUCT_CTORS(epwm_aqctl)
 };
-static_assert(sizeof(aqctl) == 2, "aqctl");
+static_assert(sizeof(epwm_aqctl) == 2, "aqctl");
 
-union aqsfrc {
+union epwm_aqsfrc {
     enum action_t : uint16_t {
         action_disabled = 0x0,
         action_clear = 0x1,
@@ -258,11 +258,11 @@ union aqsfrc {
         active_reload_t rldcsf : 2;
     } bits;
 
-    DEFINE_STRUCT_CTORS(aqsfrc)
+    DEFINE_STRUCT_CTORS(epwm_aqsfrc)
 };
-static_assert(sizeof(aqsfrc) == 2, "aqsfrc");
+static_assert(sizeof(epwm_aqsfrc) == 2, "aqsfrc");
 
-union aqscfrc {
+union epwm_aqscfrc {
     enum software_force_t : uint16_t {
         force_disabled = 0x0,
         force_low = 0x1,
@@ -276,11 +276,11 @@ union aqscfrc {
         software_force_t csfb : 2;
     } bits;
 
-    DEFINE_STRUCT_CTORS(aqscfrc)
+    DEFINE_STRUCT_CTORS(epwm_aqscfrc)
 };
-static_assert(sizeof(aqscfrc) == 2, "aqscfrc");
+static_assert(sizeof(epwm_aqscfrc) == 2, "aqscfrc");
 
-union dbctl {
+union epwm_dbctl {
     enum deadband_out_mode_t : uint16_t {
         deadband_out_bypassed = 0x0,
         deadband_out_disable_rising_delay = 0x1,
@@ -307,32 +307,32 @@ union dbctl {
         deadband_in_mode_t in_mode : 2;
     } bits;
 
-    DEFINE_STRUCT_CTORS(dbctl)
+    DEFINE_STRUCT_CTORS(epwm_dbctl)
 };
-static_assert(sizeof(dbctl) == 2, "dbctl");
+static_assert(sizeof(epwm_dbctl) == 2, "dbctl");
 
-union edge_delay {
+union epwm_edge_delay {
     uint16_t data;
     struct {
         uint16_t del : 10;
     } bits;
 
-    DEFINE_STRUCT_CTORS(edge_delay)
+    DEFINE_STRUCT_CTORS(epwm_edge_delay)
 };
-static_assert(sizeof(edge_delay) == 2, "edge_delay");
+static_assert(sizeof(epwm_edge_delay) == 2, "edge_delay");
 
-union tzsel {
+union epwm_tzsel {
     uint16_t data;
     struct {
         uint16_t cbcn : 8;
         uint16_t oshtn : 8;
     } bits;
 
-    DEFINE_STRUCT_CTORS(tzsel)
+    DEFINE_STRUCT_CTORS(epwm_tzsel)
 };
-static_assert(sizeof(tzsel) == 2, "tzsel");
+static_assert(sizeof(epwm_tzsel) == 2, "tzsel");
 
-union tzctl {
+union epwm_tzctl {
     enum action_t : uint16_t {
         action_high_impedance = 0x0,
         action_force_high = 0x1,
@@ -346,11 +346,11 @@ union tzctl {
         action_t tzb : 2;
     } bits;
 
-    DEFINE_STRUCT_CTORS(tzctl)
+    DEFINE_STRUCT_CTORS(epwm_tzctl)
 };
-static_assert(sizeof(tzctl) == 2, "tzctl");
+static_assert(sizeof(epwm_tzctl) == 2, "tzctl");
 
-union tze_ctl0 {
+union epwm_tzectl0 {
     uint16_t data;
     struct {
         uint16_t reserved0 : 1;
@@ -358,11 +358,11 @@ union tze_ctl0 {
         uint16_t ost : 1;
     } bits;
 
-    DEFINE_STRUCT_CTORS(tze_ctl0)
+    DEFINE_STRUCT_CTORS(epwm_tzectl0)
 };
-static_assert(sizeof(tze_ctl0) == 2, "tze_ctl0");
+static_assert(sizeof(epwm_tzectl0) == 2, "tze_ctl0");
 
-union tze_ctl1 {
+union epwm_tzectl1 {
     uint16_t data;
     struct {
         uint16_t tint : 1;
@@ -370,11 +370,11 @@ union tze_ctl1 {
         uint16_t ost : 1;
     } bits;
 
-    DEFINE_STRUCT_CTORS(tze_ctl1)
+    DEFINE_STRUCT_CTORS(epwm_tzectl1)
 };
-static_assert(sizeof(tze_ctl1) == 2, "tze_ctl1");
+static_assert(sizeof(epwm_tzectl1) == 2, "tze_ctl1");
 
-union etsel {
+union epwm_etsel {
     enum interrupt_sel_t : uint16_t {
         int_option_enable_equal_0 = 0x1,
         int_option_enable_equal_period = 0x2,
@@ -390,11 +390,11 @@ union etsel {
         uint16_t inten : 1;
     } bits;
 
-    DEFINE_STRUCT_CTORS(etsel)
+    DEFINE_STRUCT_CTORS(epwm_etsel)
 };
-static_assert(sizeof(etsel) == 2, "etsel");
+static_assert(sizeof(epwm_etsel) == 2, "etsel");
 
-union etps {
+union epwm_etps {
     enum period_sel_t : uint16_t {
         interrupt_generate_disable = 0x0,
         interrupt_generate_first_event = 0x1,
@@ -414,21 +414,21 @@ union etps {
         counter_register_t intcnt : 2;
     } bits;
 
-    DEFINE_STRUCT_CTORS(etps)
+    DEFINE_STRUCT_CTORS(epwm_etps)
 };
-static_assert(sizeof(etps) == 2, "etps");
+static_assert(sizeof(epwm_etps) == 2, "etps");
 
-union intstatus {
+union epwm_etictl {
     uint16_t data;
     struct {
         uint16_t ints;
     } bits;
 
-    DEFINE_STRUCT_CTORS(intstatus)
+    DEFINE_STRUCT_CTORS(epwm_etictl)
 };
-static_assert(sizeof(intstatus) == 2, "intstatus");
+static_assert(sizeof(epwm_etictl) == 2, "intstatus");
 
-union pcctl {
+union epwm_pcctl {
     enum pulse_width_t : uint16_t {
         pulse_width_1 = 0x0,
         pulse_width_2 = 0x1,
@@ -464,11 +464,11 @@ union pcctl {
         duty_cycle_t chpduty : 3;
     } bits;
 
-    DEFINE_STRUCT_CTORS(pcctl)
+    DEFINE_STRUCT_CTORS(epwm_pcctl)
 };
-static_assert(sizeof(pcctl) == 2, "pcctl");
+static_assert(sizeof(epwm_pcctl) == 2, "pcctl");
 
-union hrcnfg {
+union epwm_hrcnfg {
     enum edge_mode_t : uint16_t {
         edge_mode_disabled = 0x0,
         edge_mode_rising = 0x1,
@@ -483,11 +483,11 @@ union hrcnfg {
         uint16_t hrload : 1;
     } bits;
 
-    DEFINE_STRUCT_CTORS(hrcnfg)
+    DEFINE_STRUCT_CTORS(epwm_hrcnfg)
 };
-static_assert(sizeof(hrcnfg) == 2, "hrcnfg");
+static_assert(sizeof(epwm_hrcnfg) == 2, "hrcnfg");
 
-union ecctl1 {
+union ecap_ecctl1 {
     enum prescale_t : uint16_t {
         prescale_divide_1 = 0x0,
         prescale_divide_2 = 0x1,
@@ -514,11 +514,11 @@ union ecctl1 {
         uint16_t free_soft : 2;
     } bits;
 
-    DEFINE_STRUCT_CTORS(ecctl1)
+    DEFINE_STRUCT_CTORS(ecap_ecctl1)
 };
-static_assert(sizeof(ecctl1) == 2, "ecctl1");
+static_assert(sizeof(ecap_ecctl1) == 2, "ecctl1");
 
-union ecctl2 {
+union ecap_ecctl2 {
     enum stop_wrap_t : uint16_t {
         stop_wrap_1 = 0x0,
         stop_wrap_2 = 0x1,
@@ -545,11 +545,11 @@ union ecctl2 {
         uint16_t apwmpol : 1;
     } bits;
 
-    DEFINE_STRUCT_CTORS(ecctl2)
+    DEFINE_STRUCT_CTORS(ecap_ecctl2)
 };
-static_assert(sizeof(ecctl2) == 2, "ecctl2");
+static_assert(sizeof(ecap_ecctl2) == 2, "ecctl2");
 
-union ec_ictl0 {
+union ecap_ecictl0 {
     uint16_t data;
     struct {
         uint16_t reserved0 : 1;
@@ -562,11 +562,11 @@ union ec_ictl0 {
         uint16_t cmpeq : 1;
     } bits;
 
-    DEFINE_STRUCT_CTORS(ec_ictl0)
+    DEFINE_STRUCT_CTORS(ecap_ecictl0)
 };
-static_assert(sizeof(ec_ictl0) == 2, "eceint");
+static_assert(sizeof(ecap_ecictl0) == 2, "eceint");
 
-union ec_ictl1 {
+union ecap_ecictl1 {
     uint16_t data;
     struct {
         uint16_t ecint : 1;
@@ -579,11 +579,11 @@ union ec_ictl1 {
         uint16_t cmpeq : 1;
     } bits;
 
-    DEFINE_STRUCT_CTORS(ec_ictl1)
+    DEFINE_STRUCT_CTORS(ecap_ecictl1)
 };
-static_assert(sizeof(ec_ictl1) == 2, "ecflag");
+static_assert(sizeof(ecap_ecictl1) == 2, "ecflag");
 
-union qdecctl {
+union eqep_qdecctl {
     enum pos_counter_mode_t : uint16_t {
         count_mode_quadrature = 0x0,
         count_mode_direction = 0x1,
@@ -606,11 +606,11 @@ union qdecctl {
         pos_counter_mode_t qsrc : 2;
     } bits;
 
-    DEFINE_STRUCT_CTORS(qdecctl)
+    DEFINE_STRUCT_CTORS(eqep_qdecctl)
 };
-static_assert(sizeof(qdecctl) == 2, "qdecctl");
+static_assert(sizeof(eqep_qdecctl) == 2, "qdecctl");
 
-union qepctl {
+union eqep_qepctl {
     enum counter_latch_t : uint16_t {
         latch_counter_rising = 0x1,
         latch_counter_falling = 0x2,
@@ -656,11 +656,11 @@ union qepctl {
         emulation_ctrl_t free_soft : 2;
     } bits;
 
-    DEFINE_STRUCT_CTORS(qepctl)
+    DEFINE_STRUCT_CTORS(eqep_qepctl)
 };
-static_assert(sizeof(qepctl) == 2, "qepctl");
+static_assert(sizeof(eqep_qepctl) == 2, "qepctl");
 
-union qcapctl {
+union eqep_qcapctl {
     enum pos_event_prescaler_t : uint16_t {
         pos_prescaler_div_1 = 0x0,
         pos_prescaler_div_2 = 0x1,
@@ -694,11 +694,11 @@ union qcapctl {
         uint16_t cen : 1;
     } bits;
 
-    DEFINE_STRUCT_CTORS(qcapctl)
+    DEFINE_STRUCT_CTORS(eqep_qcapctl)
 };
-static_assert(sizeof(qcapctl) == 2, "qcapctl");
+static_assert(sizeof(eqep_qcapctl) == 2, "qcapctl");
 
-union qposctl {
+union eqep_qposctl {
     uint16_t data;
     struct {
         uint16_t pcspw : 12;
@@ -708,11 +708,11 @@ union qposctl {
         uint16_t pcshdw : 1;
     } bits;
 
-    DEFINE_STRUCT_CTORS(qposctl)
+    DEFINE_STRUCT_CTORS(eqep_qposctl)
 };
-static_assert(sizeof(qposctl) == 2, "qposctl");
+static_assert(sizeof(eqep_qposctl) == 2, "qposctl");
 
-union qe_ictl0 {
+union eqep_qeictl0 {
     uint16_t data;
     struct {
         uint16_t reserved0 : 1;
@@ -729,11 +729,11 @@ union qe_ictl0 {
         uint16_t uto : 1;
     } bits;
 
-    DEFINE_STRUCT_CTORS(qe_ictl0)
+    DEFINE_STRUCT_CTORS(eqep_qeictl0)
 };
-static_assert(sizeof(qe_ictl0) == 2, "qe_ictl0");
+static_assert(sizeof(eqep_qeictl0) == 2, "qe_ictl0");
 
-union qe_ictl1 {
+union eqep_qeictl1 {
     uint16_t data;
     struct {
         uint16_t qeint : 1;
@@ -750,11 +750,11 @@ union qe_ictl1 {
         uint16_t uto : 1;
     } bits;
 
-    DEFINE_STRUCT_CTORS(qe_ictl1)
+    DEFINE_STRUCT_CTORS(eqep_qeictl1)
 };
-static_assert(sizeof(qe_ictl1) == 2, "qe_ictl1");
+static_assert(sizeof(eqep_qeictl1) == 2, "qe_ictl1");
 
-union qepsts {
+union eqep_qepsts {
     uint16_t data;
     struct {
         uint16_t pcef : 1;
@@ -767,9 +767,9 @@ union qepsts {
         uint16_t upevnt : 1;
     } bits;
 
-    DEFINE_STRUCT_CTORS(qepsts)
+    DEFINE_STRUCT_CTORS(eqep_qepsts)
 };
-static_assert(sizeof(qepsts) == 2, "qepsts");
+static_assert(sizeof(eqep_qepsts) == 2, "qepsts");
 
 class module_peripheral : public peripheral {
 public:
@@ -784,19 +784,65 @@ public:
     using register_clkconfig = reg<0x8, clkconfig>;
     using register_clkstatus = reg<0xc, clkstatus>;
 
+    struct ecap {
+        uint32_t tsctr;
+        uint32_t ctrphs;
+        uint32_t cap1;
+        uint32_t cap2;
+        uint32_t cap3;
+        uint32_t cap4;
+        ecap_ecctl1 ecctl1;
+        ecap_ecctl2 ecctl2;
+        ecap_ecictl0 eceint;
+        ecap_ecictl1 ecflag;
+        ecap_ecictl1 ecclr;
+        ecap_ecictl0 ecfrc;
+        uint8_t reserved0[0x2a];
+        uint32_t revid;
+    };
+
     using register_ecap_tsctr = reg<ECAP_OFFSET + 0x0, uint32_t>;
     using register_ecap_ctrphs = reg<ECAP_OFFSET + 0x4, uint32_t>;
     using register_ecap_cap1 = reg<ECAP_OFFSET + 0x8, uint32_t>;
     using register_ecap_cap2 = reg<ECAP_OFFSET + 0xc, uint32_t>;
     using register_ecap_cap3 = reg<ECAP_OFFSET + 0x10, uint32_t>;
     using register_ecap_cap4 = reg<ECAP_OFFSET + 0x14, uint32_t>;
-    using register_ecap_ecctl1 = reg<ECAP_OFFSET + 0x28, ecctl1>;
-    using register_ecap_ecctl2 = reg<ECAP_OFFSET + 0x2a, ecctl2>;
-    using register_ecap_eceint = reg<ECAP_OFFSET + 0x2c, ec_ictl0>;
-    using register_ecap_ecflag = reg<ECAP_OFFSET + 0x2e, ec_ictl1>;
-    using register_ecap_ecclr = reg<ECAP_OFFSET + 0x30, ec_ictl1>;
-    using register_ecap_ecfrc = reg<ECAP_OFFSET + 0x32, ec_ictl0>;
+    using register_ecap_ecctl1 = reg<ECAP_OFFSET + 0x28, ecap_ecctl1>;
+    using register_ecap_ecctl2 = reg<ECAP_OFFSET + 0x2a, ecap_ecctl2>;
+    using register_ecap_eceint = reg<ECAP_OFFSET + 0x2c, ecap_ecictl0>;
+    using register_ecap_ecflag = reg<ECAP_OFFSET + 0x2e, ecap_ecictl1>;
+    using register_ecap_ecclr = reg<ECAP_OFFSET + 0x30, ecap_ecictl1>;
+    using register_ecap_ecfrc = reg<ECAP_OFFSET + 0x32, ecap_ecictl0>;
     using register_ecap_revid = reg<ECAP_OFFSET + 0x5c, uint32_t>;
+
+    struct eqp {
+        uint32_t qposcnt;
+        uint32_t qposinit;
+        uint32_t qposmax;
+        uint32_t qposcmp;
+        uint32_t qposilat;
+        uint32_t qposslat;
+        uint32_t qposlat;
+        uint32_t qutmar;
+        uint32_t quprd;
+        uint32_t qwdtmr;
+        uint32_t qwdprd;
+        eqep_qdecctl qdecctl;
+        eqep_qepctl qepctl;
+        eqep_qcapctl qcapct;
+        eqep_qposctl qposctl;
+        eqep_qeictl0 qeint;
+        eqep_qeictl1 qflg;
+        eqep_qeictl1 qclr;
+        eqep_qeictl0 qfrc;
+        eqep_qepsts qepsts;
+        uint16_t qctmr;
+        uint16_t qcprd;
+        uint16_t qctmrlat;
+        uint16_t qcprdlat;
+        uint8_t reserved0[0x1c];
+        uint32_t revid;
+    };
 
     using register_eqep_qposcnt = reg<EQEP_OFFSET + 0x0, uint32_t>;
     using register_eqep_qposinit = reg<EQEP_OFFSET + 0x4, uint32_t>;
@@ -809,51 +855,51 @@ public:
     using register_eqep_quprd = reg<EQEP_OFFSET + 0x20, uint32_t>;
     using register_eqep_qwdtmr = reg<EQEP_OFFSET + 0x24, uint16_t>;
     using register_eqep_qwdprd = reg<EQEP_OFFSET + 0x26, uint16_t>;
-    using register_eqep_qdecctl = reg<EQEP_OFFSET + 0x28, qdecctl>;
-    using register_eqep_qepctl = reg<EQEP_OFFSET + 0x2a, qepctl>;
-    using register_eqep_qcapctl = reg<EQEP_OFFSET + 0x2c, qcapctl>;
-    using register_eqep_qposctl = reg<EQEP_OFFSET + 0x2e, qposctl>;
-    using register_eqep_qeint = reg<EQEP_OFFSET + 0x30, qe_ictl0>;
-    using register_eqep_qflg = reg<EQEP_OFFSET + 0x32, qe_ictl1>;
-    using register_eqep_qclr = reg<EQEP_OFFSET + 0x34, qe_ictl1>;
-    using register_eqep_qfrc = reg<EQEP_OFFSET + 0x36, qe_ictl0>;
-    using register_eqep_qepsts = reg<EQEP_OFFSET + 0x38, qepsts>;
+    using register_eqep_qdecctl = reg<EQEP_OFFSET + 0x28, eqep_qdecctl>;
+    using register_eqep_qepctl = reg<EQEP_OFFSET + 0x2a, eqep_qepctl>;
+    using register_eqep_qcapctl = reg<EQEP_OFFSET + 0x2c, eqep_qcapctl>;
+    using register_eqep_qposctl = reg<EQEP_OFFSET + 0x2e, eqep_qposctl>;
+    using register_eqep_qeint = reg<EQEP_OFFSET + 0x30, eqep_qeictl0>;
+    using register_eqep_qflg = reg<EQEP_OFFSET + 0x32, eqep_qeictl1>;
+    using register_eqep_qclr = reg<EQEP_OFFSET + 0x34, eqep_qeictl1>;
+    using register_eqep_qfrc = reg<EQEP_OFFSET + 0x36, eqep_qeictl0>;
+    using register_eqep_qepsts = reg<EQEP_OFFSET + 0x38, eqep_qepsts>;
     using register_eqep_qctmr = reg<EQEP_OFFSET + 0x3a, uint16_t>;
     using register_eqep_qcprd = reg<EQEP_OFFSET + 0x3c, uint16_t>;
     using register_eqep_qctmrlat = reg<EQEP_OFFSET + 0x3e, uint16_t>;
     using register_eqep_qcprdlat = reg<EQEP_OFFSET + 0x40, uint16_t>;
     using register_eqep_revid = reg<EQEP_OFFSET + 0x5c, uint32_t>;
 
-    using register_epwm_tbctl = reg<EPWM_OFFSET + 0x0, tbctl>;
-    using register_epwm_tbsts = reg<EPWM_OFFSET + 0x2, tbsts>;
-    using register_epwm_tbphshr = reg<EPWM_OFFSET + 0x4, tbphshr>;
+    using register_epwm_tbctl = reg<EPWM_OFFSET + 0x0, epwm_tbctl>;
+    using register_epwm_tbsts = reg<EPWM_OFFSET + 0x2, epwm_tbsts>;
+    using register_epwm_tbphshr = reg<EPWM_OFFSET + 0x4, epwm_tbphshr>;
     using register_epwm_tbphs = reg<EPWM_OFFSET + 0x6, uint16_t>;
     using register_epwm_tbcnt = reg<EPWM_OFFSET + 0x8, uint16_t>;
     using register_epwm_tbprd = reg<EPWM_OFFSET + 0xa, uint16_t>;
-    using register_epwm_cmpctl = reg<EPWM_OFFSET + 0xe, cmpctl>;
-    using register_epwm_cmpahr = reg<EPWM_OFFSET + 0x10, cmpahr>;
+    using register_epwm_cmpctl = reg<EPWM_OFFSET + 0xe, epwm_cmpctl>;
+    using register_epwm_cmpahr = reg<EPWM_OFFSET + 0x10, epwm_cmpahr>;
     using register_epwm_cmpa = reg<EPWM_OFFSET + 0x12, uint16_t>;
     using register_epwm_cmpb = reg<EPWM_OFFSET + 0x14, uint16_t>;
-    using register_epwm_aqctla = reg<EPWM_OFFSET + 0x16, aqctl>;
-    using register_epwm_aqctlb = reg<EPWM_OFFSET + 0x18, aqctl>;
-    using register_epwm_aqsfrc = reg<EPWM_OFFSET + 0x1a, aqsfrc>;
-    using register_epwm_aqcsfrc = reg<EPWM_OFFSET + 0x1c, aqscfrc>;
-    using register_epwm_dbctl = reg<EPWM_OFFSET + 0x1e, dbctl>;
-    using register_epwm_dbred = reg<EPWM_OFFSET + 0x20, edge_delay>;
-    using register_epwm_dbfed = reg<EPWM_OFFSET + 0x22, edge_delay>;
-    using register_epwm_tzsel = reg<EPWM_OFFSET + 0x24, tzsel>;
-    using register_epwm_tzctl = reg<EPWM_OFFSET + 0x28, tzctl>;
-    using register_epwm_tzeint = reg<EPWM_OFFSET + 0x2a, tze_ctl0>;
-    using register_epwm_tzflg = reg<EPWM_OFFSET + 0x2c, tze_ctl1>;
-    using register_epwm_tzclr = reg<EPWM_OFFSET + 0x2e, tze_ctl1>;
-    using register_epwm_tzfrc = reg<EPWM_OFFSET + 0x30, tze_ctl0>;
-    using register_epwm_etsel = reg<EPWM_OFFSET + 0x32, etsel>;
-    using register_epwm_etps = reg<EPWM_OFFSET + 0x34, etps>;
-    using register_epwm_etflg = reg<EPWM_OFFSET + 0x36, intstatus>;
-    using register_epwm_etclr = reg<EPWM_OFFSET + 0x38, intstatus>;
-    using register_epwm_etfrc = reg<EPWM_OFFSET + 0x3a, intstatus>;
-    using register_epwm_pcctl = reg<EPWM_OFFSET + 0x3c, pcctl>;
-    using register_epwm_hrcnfg = reg<EPWM_OFFSET + 0xc0, hrcnfg>;
+    using register_epwm_aqctla = reg<EPWM_OFFSET + 0x16, epwm_aqctl>;
+    using register_epwm_aqctlb = reg<EPWM_OFFSET + 0x18, epwm_aqctl>;
+    using register_epwm_aqsfrc = reg<EPWM_OFFSET + 0x1a, epwm_aqsfrc>;
+    using register_epwm_aqcsfrc = reg<EPWM_OFFSET + 0x1c, epwm_aqscfrc>;
+    using register_epwm_dbctl = reg<EPWM_OFFSET + 0x1e, epwm_dbctl>;
+    using register_epwm_dbred = reg<EPWM_OFFSET + 0x20, epwm_edge_delay>;
+    using register_epwm_dbfed = reg<EPWM_OFFSET + 0x22, epwm_edge_delay>;
+    using register_epwm_tzsel = reg<EPWM_OFFSET + 0x24, epwm_tzsel>;
+    using register_epwm_tzctl = reg<EPWM_OFFSET + 0x28, epwm_tzctl>;
+    using register_epwm_tzeint = reg<EPWM_OFFSET + 0x2a, epwm_tzectl0>;
+    using register_epwm_tzflg = reg<EPWM_OFFSET + 0x2c, epwm_tzectl1>;
+    using register_epwm_tzclr = reg<EPWM_OFFSET + 0x2e, epwm_tzectl1>;
+    using register_epwm_tzfrc = reg<EPWM_OFFSET + 0x30, epwm_tzectl0>;
+    using register_epwm_etsel = reg<EPWM_OFFSET + 0x32, epwm_etsel>;
+    using register_epwm_etps = reg<EPWM_OFFSET + 0x34, epwm_etps>;
+    using register_epwm_etflg = reg<EPWM_OFFSET + 0x36, epwm_etictl>;
+    using register_epwm_etclr = reg<EPWM_OFFSET + 0x38, epwm_etictl>;
+    using register_epwm_etfrc = reg<EPWM_OFFSET + 0x3a, epwm_etictl>;
+    using register_epwm_pcctl = reg<EPWM_OFFSET + 0x3c, epwm_pcctl>;
+    using register_epwm_hrcnfg = reg<EPWM_OFFSET + 0xc0, epwm_hrcnfg>;
 
     explicit module_peripheral(size_t address) noexcept;
     ~module_peripheral() override = default;
