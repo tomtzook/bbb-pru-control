@@ -65,6 +65,9 @@ private:
     static constexpr const char* DIRECTION_OUTPUT = "out";
 
     static constexpr const char* EDGE_NONE = "none";
+    static constexpr const char* EDGE_RISING = "rising";
+    static constexpr const char* EDGE_FALLING = "falling";
+    static constexpr const char* EDGE_BOTH = "both";
 
     static constexpr const char* VALUE_LOW = "0";
     static constexpr const char* VALUE_HIGH = "1";

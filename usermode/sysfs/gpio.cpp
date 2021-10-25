@@ -4,7 +4,7 @@
 #include <fstream>
 #include <climits>
 
-#include "gpio_sysfs.h"
+#include "sysfs/gpio.h"
 
 
 namespace bbb::gpio {
@@ -66,6 +66,12 @@ edge_t sysfs_pin::edge() const {
     std::string value = read(FILE_EDGE);
     if (EDGE_NONE == value) {
         return edge_none;
+    } else if (EDGE_RISING == value) {
+        return edge_rising;
+    } else if (EDGE_FALLING == value) {
+        return edge_falling;
+    } else if (EDGE_BOTH == value) {
+        return edge_both;
     } else {
         throw bad_value_exception(value);
     }
@@ -97,6 +103,15 @@ void sysfs_pin::edge(edge_t edge) {
     switch (edge) {
         case edge_none:
             write(FILE_EDGE, EDGE_NONE);
+            break;
+        case edge_rising:
+            write(FILE_EDGE, EDGE_RISING);
+            break;
+        case edge_falling:
+            write(FILE_EDGE, EDGE_FALLING);
+            break;
+        case edge_both:
+            write(FILE_EDGE, EDGE_BOTH);
             break;
     }
 }

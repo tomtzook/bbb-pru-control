@@ -98,7 +98,10 @@ enum direction_t {
 };
 
 enum edge_t {
-    edge_none
+    edge_none,
+    edge_rising,
+    edge_falling,
+    edge_both
 };
 
 enum value_t {

@@ -1,6 +1,9 @@
 
 add_library(bbb_usermode STATIC
-        gpio_sysfs.cpp gpio_direct.cpp gpio_direct.h gpio_def.cpp)
+        gpio_def.cpp
+        sysfs/gpio.cpp
+        mem/gpio.cpp
+        mem/peripheral.cpp mem/pwmss.cpp mem/pwmss.h)
 target_include_directories(bbb_usermode PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR})
-target_compile_definitions(bbb_usermode PUBLIC GPIO_DIRECT_GLOBAL=1)
+target_compile_definitions(bbb_usermode PUBLIC MEM_GLOBAL_REGS=1)

@@ -14,6 +14,9 @@ std::ostream& operator<<(std::ostream& os, const bbb::gpio::direction_t& dir) {
 std::ostream& operator<<(std::ostream& os, const bbb::gpio::edge_t& edge) {
     switch (edge) {
         case bbb::gpio::edge_t::edge_none: os << "none"; break;
+        case bbb::gpio::edge_t::edge_rising: os << "rising"; break;
+        case bbb::gpio::edge_t::edge_falling: os << "falling"; break;
+        case bbb::gpio::edge_t::edge_both: os << "both"; break;
     }
 
     return os;
