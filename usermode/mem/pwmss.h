@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <ostream>
 
 #include "mem/peripheral.h"
 
@@ -37,7 +38,7 @@ struct pwmss_registers {
             uint32_t reserved0 : 2;
             uint32_t scheme : 2;
         } bits;
-    } iprevision;
+    } revision;
     volatile union {
         enum idle_mode_t : uint32_t {
             idle_mode_force = 0x0,
@@ -810,6 +811,14 @@ public:
     explicit module_peripheral(size_t address) noexcept;
     ~module_peripheral() override = default;
 
+    volatile pwmss_registers* operator->() {
+        return peripheral::data<register_pwmss>();
+    }
+
+    const volatile pwmss_registers* operator->() const {
+        return peripheral::data<register_pwmss>();
+    }
+
     volatile pwmss_registers* pwmss() {
         return peripheral::data<register_pwmss>();
     }
@@ -858,3 +867,5 @@ module_peripheral& module() {
 #endif
 
 }
+
+std::ostream& operator<<(std::ostream& os, const bbb::pwmss::module_peripheral& module_peripheral);

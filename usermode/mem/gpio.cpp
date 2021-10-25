@@ -71,24 +71,13 @@ void direct_pin::value(value_t value) {
 }
 
 std::ostream& operator<<(std::ostream& os, const bbb::gpio::module_peripheral& module_peripheral) {
-    auto registers = module_peripheral.gpio();
-
-    os
-        << "idver: " << std::endl
-        << "\tminor=" << std::hex << registers->idver.bits.minor << std::endl
-        << "\tcustom=" << std::hex << registers->idver.bits.custom << std::endl
-        << "\tmajor=" << std::hex << registers->idver.bits.major << std::endl
-        << "\trtl=" << std::hex << registers->idver.bits.rtl << std::endl
-        << "\tfunc=" << std::hex << registers->idver.bits.func << std::endl
-        << "\tscheme=" << std::hex << registers->idver.bits.scheme << std::endl
-        << "sysconfig:" << std::endl
-        << "\tauto_idle=" << std::hex << registers->sysconfig.bits.auto_idle << std::endl
-        << "\tena_wakeup=" << std::hex << registers->sysconfig.bits.ena_wakeup << std::endl
-        << "\tena_wakeup=" << std::hex << registers->sysconfig.bits.ena_wakeup << std::endl
-        << "\tidle_mode=" << std::hex << registers->sysconfig.bits.idle_mode << std::endl
-        << "ctrl:" << std::endl
-        << "\tdisable_module=" << std::hex << registers->ctrl.bits.disable_module << std::endl
-        << "\tgating_ratio=" << std::hex << registers->ctrl.bits.gating_ratio;
+    os << "revision:" << std::endl
+       << "\tminor=0x" << std::hex << module_peripheral->revision.bits.minor << std::endl
+       << "\tcustom=0x" << std::hex << module_peripheral->revision.bits.custom << std::endl
+       << "\tmajor=0x" << std::hex << module_peripheral->revision.bits.major << std::endl
+       << "\trtl=0x" << std::hex << module_peripheral->revision.bits.rtl << std::endl
+       << "\tfunc=0x" << std::hex << module_peripheral->revision.bits.func << std::endl
+       << "\tscheme=0x" << std::hex << module_peripheral->revision.bits.scheme;
 
     return os;
 }

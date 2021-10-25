@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <cstddef>
 #include <type_traits>
+#include <ostream>
+
 #include "peripheral.h"
 
 
@@ -440,6 +442,14 @@ public:
     module_peripheral(const module_peripheral& other) = delete;
     ~module_peripheral() override = default;
 
+    volatile adc_registers* operator->() {
+        return peripheral::data<register_all>();
+    }
+
+    const volatile adc_registers* operator->() const {
+        return peripheral::data<register_all>();
+    }
+
     volatile adc_registers* adc() {
         return peripheral::data<register_all>();
     }
@@ -464,3 +474,5 @@ module_peripheral& module() {
 #endif
 
 }
+
+std::ostream& operator<<(std::ostream& os, const bbb::adctsc::module_peripheral& module_peripheral);

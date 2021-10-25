@@ -37,7 +37,7 @@ struct gpio_registers {
             uint32_t reserved0 : 2;
             uint32_t scheme : 2;
         } bits;
-    } idver;
+    } revision;
     uint8_t reserved0[0xc];
     volatile union {
         enum idle_mode_t : uint32_t {
@@ -112,6 +112,14 @@ public:
     explicit module_peripheral(size_t address) noexcept;
     module_peripheral(const module_peripheral& other) = delete;
     ~module_peripheral() override = default;
+
+    volatile gpio_registers* operator->() {
+        return peripheral::data<register_all>();
+    }
+
+    const volatile gpio_registers* operator->() const {
+        return peripheral::data<register_all>();
+    }
 
     volatile gpio_registers* gpio() {
         return peripheral::data<register_all>();
