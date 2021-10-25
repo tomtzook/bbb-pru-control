@@ -469,7 +469,7 @@ union pcctl {
 static_assert(sizeof(pcctl) == 2, "pcctl");
 
 union hrcnfg {
-    enum edge_mode_t {
+    enum edge_mode_t : uint16_t {
         edge_mode_disabled = 0x0,
         edge_mode_rising = 0x1,
         edge_mode_falling = 0x2,
@@ -487,6 +487,290 @@ union hrcnfg {
 };
 static_assert(sizeof(hrcnfg) == 2, "hrcnfg");
 
+union ecctl1 {
+    enum prescale_t : uint16_t {
+        prescale_divide_1 = 0x0,
+        prescale_divide_2 = 0x1,
+        prescale_divide_4 = 0x2,
+        prescale_divide_6 = 0x3,
+        prescale_divide_8 = 0x4,
+        prescale_divide_10 = 0x5,
+        prescale_divide_60 = 0x1e,
+        prescale_divide_62 = 0x1f,
+    };
+
+    uint16_t data;
+    struct {
+        uint16_t cap1pol : 1;
+        uint16_t ctrrst1 : 1;
+        uint16_t cap2pol : 1;
+        uint16_t ctrrst2 : 1;
+        uint16_t cap3pol : 1;
+        uint16_t ctrrst3 : 1;
+        uint16_t cap4pol : 1;
+        uint16_t ctrrst4 : 1;
+        uint16_t caplden : 1;
+        prescale_t prescale : 5;
+        uint16_t free_soft : 2;
+    } bits;
+
+    DEFINE_STRUCT_CTORS(ecctl1)
+};
+static_assert(sizeof(ecctl1) == 2, "ecctl1");
+
+union ecctl2 {
+    enum stop_wrap_t : uint16_t {
+        stop_wrap_1 = 0x0,
+        stop_wrap_2 = 0x1,
+        stop_wrap_3 = 0x2,
+        stop_wrap_4 = 0x3,
+    };
+    enum synco_sel_t : uint16_t {
+        synch_out_passthrough = 0x0,
+        synch_out_prdeq = 0x1,
+        synch_out_disable = 0x2,
+        synch_out_disable1 = 0x3,
+    };
+
+    uint16_t data;
+    struct {
+        uint16_t cont_onesht : 1;
+        stop_wrap_t stop_wrap : 2;
+        uint16_t re_arm : 1;
+        uint16_t tsctrstop : 1;
+        uint16_t synci_en : 1;
+        synco_sel_t synco_sel : 2;
+        uint16_t swsync : 1;
+        uint16_t cap_apwm : 1;
+        uint16_t apwmpol : 1;
+    } bits;
+
+    DEFINE_STRUCT_CTORS(ecctl2)
+};
+static_assert(sizeof(ecctl2) == 2, "ecctl2");
+
+union ec_ictl0 {
+    uint16_t data;
+    struct {
+        uint16_t reserved0 : 1;
+        uint16_t cevt1 : 1;
+        uint16_t cevt2 : 1;
+        uint16_t cevt3 : 1;
+        uint16_t cevt4 : 1;
+        uint16_t cntovf : 1;
+        uint16_t prdeq : 1;
+        uint16_t cmpeq : 1;
+    } bits;
+
+    DEFINE_STRUCT_CTORS(ec_ictl0)
+};
+static_assert(sizeof(ec_ictl0) == 2, "eceint");
+
+union ec_ictl1 {
+    uint16_t data;
+    struct {
+        uint16_t ecint : 1;
+        uint16_t cevt1 : 1;
+        uint16_t cevt2 : 1;
+        uint16_t cevt3 : 1;
+        uint16_t cevt4 : 1;
+        uint16_t cntovf : 1;
+        uint16_t prdeq : 1;
+        uint16_t cmpeq : 1;
+    } bits;
+
+    DEFINE_STRUCT_CTORS(ec_ictl1)
+};
+static_assert(sizeof(ec_ictl1) == 2, "ecflag");
+
+union qdecctl {
+    enum pos_counter_mode_t : uint16_t {
+        count_mode_quadrature = 0x0,
+        count_mode_direction = 0x1,
+        count_mode_up_freq = 0x2,
+        count_mode_down_freq = 0x3,
+    };
+
+    uint16_t data;
+    struct {
+        uint16_t reserved : 5;
+        uint16_t qsp : 1;
+        uint16_t qip : 1;
+        uint16_t qbp : 1;
+        uint16_t qap : 1;
+        uint16_t igate : 1;
+        uint16_t swap : 1;
+        uint16_t xcr : 1;
+        uint16_t spsel : 1;
+        uint16_t soen : 1;
+        pos_counter_mode_t qsrc : 2;
+    } bits;
+
+    DEFINE_STRUCT_CTORS(qdecctl)
+};
+static_assert(sizeof(qdecctl) == 2, "qdecctl");
+
+union qepctl {
+    enum counter_latch_t : uint16_t {
+        latch_counter_rising = 0x1,
+        latch_counter_falling = 0x2,
+        latch_counter_index_marker = 0x3,
+    };
+    enum index_event_init_t : uint16_t {
+        index_event_init_nothing = 0x0,
+        index_event_init_nothing1 = 0x1,
+        index_event_init_qepi_rising = 0x2,
+        index_event_init_qepi_falling = 0x3,
+    };
+    enum strobe_event_init_t : uint16_t {
+        strobe_event_init_nothing = 0x0,
+        strobe_event_init_nothing1 = 0x1,
+        strobe_event_init_qeps_rising = 0x2,
+        strobe_event_init_qeps_direction = 0x3,
+    };
+    enum counter_reset_t : uint16_t {
+        counter_reset_index_event = 0x0,
+        counter_reset_max_pos = 0x1,
+        counter_reset_first_index_event = 0x2,
+        counter_reset_unit_time_event = 0x3,
+    };
+    enum emulation_ctrl_t : uint16_t {
+        emulation_stop_immediately = 0x0,
+        emulation_count_to_rollover = 0x1,
+        emulation_unaffected = 0x2,
+        emulation_unaffected1 = 0x3,
+    };
+
+    uint16_t data;
+    struct {
+        uint16_t wde : 1;
+        uint16_t ute : 1;
+        uint16_t qclm : 1;
+        uint16_t phen : 1;
+        counter_latch_t iel : 2;
+        uint16_t sel : 1;
+        uint16_t swi : 1;
+        index_event_init_t iei : 2;
+        strobe_event_init_t sei : 2;
+        counter_reset_t pcrm : 2;
+        emulation_ctrl_t free_soft : 2;
+    } bits;
+
+    DEFINE_STRUCT_CTORS(qepctl)
+};
+static_assert(sizeof(qepctl) == 2, "qepctl");
+
+union qcapctl {
+    enum pos_event_prescaler_t : uint16_t {
+        pos_prescaler_div_1 = 0x0,
+        pos_prescaler_div_2 = 0x1,
+        pos_prescaler_div_4 = 0x2,
+        pos_prescaler_div_8 = 0x3,
+        pos_prescaler_div_16 = 0x4,
+        pos_prescaler_div_32 = 0x5,
+        pos_prescaler_div_64 = 0x6,
+        pos_prescaler_div_128 = 0x7,
+        pos_prescaler_div_256 = 0x8,
+        pos_prescaler_div_512 = 0x9,
+        pos_prescaler_div_1024 = 0xa,
+        pos_prescaler_div_2048 = 0xb,
+    };
+    enum cap_timer_prescaler_t : uint16_t {
+        cap_prescaler_div_1 = 0x0,
+        cap_prescaler_div_2 = 0x1,
+        cap_prescaler_div_4 = 0x2,
+        cap_prescaler_div_8 = 0x3,
+        cap_prescaler_div_16 = 0x4,
+        cap_prescaler_div_32 = 0x5,
+        cap_prescaler_div_64 = 0x6,
+        cap_prescaler_div_128 = 0x7,
+    };
+
+    uint16_t data;
+    struct {
+        pos_event_prescaler_t upps : 4;
+        cap_timer_prescaler_t ccps : 3;
+        uint16_t reserved0 : 8;
+        uint16_t cen : 1;
+    } bits;
+
+    DEFINE_STRUCT_CTORS(qcapctl)
+};
+static_assert(sizeof(qcapctl) == 2, "qcapctl");
+
+union qposctl {
+    uint16_t data;
+    struct {
+        uint16_t pcspw : 12;
+        uint16_t pce : 1;
+        uint16_t pcpol : 1;
+        uint16_t pcload : 1;
+        uint16_t pcshdw : 1;
+    } bits;
+
+    DEFINE_STRUCT_CTORS(qposctl)
+};
+static_assert(sizeof(qposctl) == 2, "qposctl");
+
+union qe_ictl0 {
+    uint16_t data;
+    struct {
+        uint16_t reserved0 : 1;
+        uint16_t pce : 1;
+        uint16_t phe : 1;
+        uint16_t qdc : 1;
+        uint16_t wto : 1;
+        uint16_t pcu : 1;
+        uint16_t pco : 1;
+        uint16_t pcr : 1;
+        uint16_t pcm : 1;
+        uint16_t sel : 1;
+        uint16_t iel : 1;
+        uint16_t uto : 1;
+    } bits;
+
+    DEFINE_STRUCT_CTORS(qe_ictl0)
+};
+static_assert(sizeof(qe_ictl0) == 2, "qe_ictl0");
+
+union qe_ictl1 {
+    uint16_t data;
+    struct {
+        uint16_t qeint : 1;
+        uint16_t pce : 1;
+        uint16_t phe : 1;
+        uint16_t qdc : 1;
+        uint16_t wto : 1;
+        uint16_t pcu : 1;
+        uint16_t pco : 1;
+        uint16_t pcr : 1;
+        uint16_t pcm : 1;
+        uint16_t sel : 1;
+        uint16_t iel : 1;
+        uint16_t uto : 1;
+    } bits;
+
+    DEFINE_STRUCT_CTORS(qe_ictl1)
+};
+static_assert(sizeof(qe_ictl1) == 2, "qe_ictl1");
+
+union qepsts {
+    uint16_t data;
+    struct {
+        uint16_t pcef : 1;
+        uint16_t fimf : 1;
+        uint16_t cdef : 1;
+        uint16_t coef : 1;
+        uint16_t qdlf : 1;
+        uint16_t qdf : 1;
+        uint16_t fdf : 1;
+        uint16_t upevnt : 1;
+    } bits;
+
+    DEFINE_STRUCT_CTORS(qepsts)
+};
+static_assert(sizeof(qepsts) == 2, "qepsts");
+
 class module_peripheral : public peripheral {
 public:
     static constexpr size_t MODULE_CTRL_SIZE = 0x1000;
@@ -499,6 +783,46 @@ public:
     using register_sysconfig = reg<0x4, sysconfig>;
     using register_clkconfig = reg<0x8, clkconfig>;
     using register_clkstatus = reg<0xc, clkstatus>;
+
+    using register_ecap_tsctr = reg<ECAP_OFFSET + 0x0, uint32_t>;
+    using register_ecap_ctrphs = reg<ECAP_OFFSET + 0x4, uint32_t>;
+    using register_ecap_cap1 = reg<ECAP_OFFSET + 0x8, uint32_t>;
+    using register_ecap_cap2 = reg<ECAP_OFFSET + 0xc, uint32_t>;
+    using register_ecap_cap3 = reg<ECAP_OFFSET + 0x10, uint32_t>;
+    using register_ecap_cap4 = reg<ECAP_OFFSET + 0x14, uint32_t>;
+    using register_ecap_ecctl1 = reg<ECAP_OFFSET + 0x28, ecctl1>;
+    using register_ecap_ecctl2 = reg<ECAP_OFFSET + 0x2a, ecctl2>;
+    using register_ecap_eceint = reg<ECAP_OFFSET + 0x2c, ec_ictl0>;
+    using register_ecap_ecflag = reg<ECAP_OFFSET + 0x2e, ec_ictl1>;
+    using register_ecap_ecclr = reg<ECAP_OFFSET + 0x30, ec_ictl1>;
+    using register_ecap_ecfrc = reg<ECAP_OFFSET + 0x32, ec_ictl0>;
+    using register_ecap_revid = reg<ECAP_OFFSET + 0x5c, uint32_t>;
+
+    using register_eqep_qposcnt = reg<EQEP_OFFSET + 0x0, uint32_t>;
+    using register_eqep_qposinit = reg<EQEP_OFFSET + 0x4, uint32_t>;
+    using register_eqep_qposmax = reg<EQEP_OFFSET + 0x8, uint32_t>;
+    using register_eqep_qposcmp = reg<EQEP_OFFSET + 0xc, uint32_t>;
+    using register_eqep_qposilat = reg<EQEP_OFFSET + 0x10, uint32_t>;
+    using register_eqep_qposslat = reg<EQEP_OFFSET + 0x14, uint32_t>;
+    using register_eqep_qposlat = reg<EQEP_OFFSET + 0x18, uint32_t>;
+    using register_eqep_qutmar = reg<EQEP_OFFSET + 0x1c, uint32_t>;
+    using register_eqep_quprd = reg<EQEP_OFFSET + 0x20, uint32_t>;
+    using register_eqep_qwdtmr = reg<EQEP_OFFSET + 0x24, uint16_t>;
+    using register_eqep_qwdprd = reg<EQEP_OFFSET + 0x26, uint16_t>;
+    using register_eqep_qdecctl = reg<EQEP_OFFSET + 0x28, qdecctl>;
+    using register_eqep_qepctl = reg<EQEP_OFFSET + 0x2a, qepctl>;
+    using register_eqep_qcapctl = reg<EQEP_OFFSET + 0x2c, qcapctl>;
+    using register_eqep_qposctl = reg<EQEP_OFFSET + 0x2e, qposctl>;
+    using register_eqep_qeint = reg<EQEP_OFFSET + 0x30, qe_ictl0>;
+    using register_eqep_qflg = reg<EQEP_OFFSET + 0x32, qe_ictl1>;
+    using register_eqep_qclr = reg<EQEP_OFFSET + 0x34, qe_ictl1>;
+    using register_eqep_qfrc = reg<EQEP_OFFSET + 0x36, qe_ictl0>;
+    using register_eqep_qepsts = reg<EQEP_OFFSET + 0x38, qepsts>;
+    using register_eqep_qctmr = reg<EQEP_OFFSET + 0x3a, uint16_t>;
+    using register_eqep_qcprd = reg<EQEP_OFFSET + 0x3c, uint16_t>;
+    using register_eqep_qctmrlat = reg<EQEP_OFFSET + 0x3e, uint16_t>;
+    using register_eqep_qcprdlat = reg<EQEP_OFFSET + 0x40, uint16_t>;
+    using register_eqep_revid = reg<EQEP_OFFSET + 0x5c, uint32_t>;
 
     using register_epwm_tbctl = reg<EPWM_OFFSET + 0x0, tbctl>;
     using register_epwm_tbsts = reg<EPWM_OFFSET + 0x2, tbsts>;
@@ -522,7 +846,6 @@ public:
     using register_epwm_tzeint = reg<EPWM_OFFSET + 0x2a, tze_ctl0>;
     using register_epwm_tzflg = reg<EPWM_OFFSET + 0x2c, tze_ctl1>;
     using register_epwm_tzclr = reg<EPWM_OFFSET + 0x2e, tze_ctl1>;
-
     using register_epwm_tzfrc = reg<EPWM_OFFSET + 0x30, tze_ctl0>;
     using register_epwm_etsel = reg<EPWM_OFFSET + 0x32, etsel>;
     using register_epwm_etps = reg<EPWM_OFFSET + 0x34, etps>;
