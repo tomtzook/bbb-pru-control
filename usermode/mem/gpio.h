@@ -40,7 +40,7 @@ union iprevision {
 static_assert(sizeof(iprevision) == 4, "iprevision");
 
 union sysconfig {
-    enum idle_mode_t {
+    enum idle_mode_t : uint32_t {
         idle_mode_force = 0x0,
         idle_mode_no = 0x1,
         idle_mode_smart = 0x2,
