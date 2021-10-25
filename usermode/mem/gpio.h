@@ -25,7 +25,7 @@ using gpio3 = module_def<3, 0x481ae000>;
 
 #pragma pack(push, 1)
 
-struct gpio_data {
+struct gpio_registers {
     volatile union {
         volatile uint32_t data;
         volatile struct {
@@ -107,17 +107,17 @@ class module_peripheral : public peripheral {
 public:
     static constexpr size_t MODULE_CTRL_SIZE = 0x1000;
 
-    using register_all = reg<0x0, gpio_data>;
+    using register_all = reg<0x0, gpio_registers>;
 
     explicit module_peripheral(size_t address) noexcept;
     module_peripheral(const module_peripheral& other) = delete;
     ~module_peripheral() override = default;
 
-    volatile gpio_data* operator->() {
+    volatile gpio_registers* gpio() {
         return peripheral::data<register_all>();
     }
 
-    const volatile gpio_data* operator->() const {
+    const volatile gpio_registers* gpio() const {
         return peripheral::data<register_all>();
     }
 };
@@ -133,12 +133,12 @@ public:
     void value(value_t value) override;
 
 private:
-    volatile gpio_data* m_module_ctrl;
+    volatile gpio_registers* m_module_ctrl;
     unsigned m_mask;
 };
 
 #ifdef MEM_GLOBAL_REGS
-extern module_peripheral _global_gpio_modules[];
+extern module_peripheral _global_modules[];
 
 template<
         typename T,
@@ -147,7 +147,7 @@ template<
                 bool>::type = 0
 >
 module_peripheral& module() {
-    return _global_gpio_modules[T::MODULE];
+    return _global_modules[T::MODULE];
 }
 
 template<
@@ -157,7 +157,7 @@ template<
                 bool>::type = 0
 >
 direct_pin make_direct_pin() {
-    return direct_pin(_global_gpio_modules[T::MODULE], 1u << T::INDEX);
+    return direct_pin(_global_modules[T::MODULE], 1u << T::INDEX);
 }
 #endif
 

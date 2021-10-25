@@ -25,7 +25,7 @@ using pwmss2 = module_def<2, 0x48304000>;
 
 #pragma pack(push, 1)
 
-struct pwmss_data {
+struct pwmss_registers {
     volatile union {
         volatile uint32_t data;
         volatile struct {
@@ -88,7 +88,7 @@ struct pwmss_data {
     } clkstatus;
 };
 
-struct ecap_data {
+struct ecap_registers {
     volatile uint32_t tsctr;
     volatile uint32_t ctrphs;
     volatile uint32_t cap1;
@@ -207,7 +207,7 @@ struct ecap_data {
     volatile uint32_t revid;
 };
 
-struct eqep_data {
+struct eqep_registers {
     volatile uint32_t qposcnt;
     volatile uint32_t qposinit;
     volatile uint32_t qposmax;
@@ -421,7 +421,7 @@ struct eqep_data {
     volatile uint32_t revid;
 };
 
-struct epwm_data {
+struct epwm_registers {
     volatile union {
         enum ctr_mode_t : uint16_t {
             ctrmode_up_count = 0x0,
@@ -802,49 +802,49 @@ class module_peripheral : public peripheral {
 public:
     static constexpr size_t MODULE_CTRL_SIZE = 0x1000;
 
-    using register_pwmss = reg<0x0, pwmss_data>;
-    using register_ecap = reg<0x100, ecap_data>;
-    using register_eqep = reg<0x180, eqep_data>;
-    using register_epwm = reg<0x200, epwm_data>;
+    using register_pwmss = reg<0x0, pwmss_registers>;
+    using register_ecap = reg<0x100, ecap_registers>;
+    using register_eqep = reg<0x180, eqep_registers>;
+    using register_epwm = reg<0x200, epwm_registers>;
 
     explicit module_peripheral(size_t address) noexcept;
     ~module_peripheral() override = default;
 
-    volatile pwmss_data* pwmss() {
+    volatile pwmss_registers* pwmss() {
         return peripheral::data<register_pwmss>();
     }
 
-    const volatile pwmss_data* pwmss() const {
+    const volatile pwmss_registers* pwmss() const {
         return peripheral::data<register_pwmss>();
     }
 
-    volatile ecap_data* ecap() {
+    volatile ecap_registers* ecap() {
         return peripheral::data<register_ecap>();
     }
 
-    const volatile ecap_data* ecap() const {
+    const volatile ecap_registers* ecap() const {
         return peripheral::data<register_ecap>();
     }
 
-    volatile eqep_data* eqep() {
+    volatile eqep_registers* eqep() {
         return peripheral::data<register_eqep>();
     }
 
-    const volatile eqep_data* eqep() const {
+    const volatile eqep_registers* eqep() const {
         return peripheral::data<register_eqep>();
     }
 
-    volatile epwm_data* epwm() {
+    volatile epwm_registers* epwm() {
         return peripheral::data<register_epwm>();
     }
 
-    const volatile epwm_data* epwm() const {
+    const volatile epwm_registers* epwm() const {
         return peripheral::data<register_epwm>();
     }
 };
 
 #ifdef MEM_GLOBAL_REGS
-extern module_peripheral _global_pwmss_modules[];
+extern module_peripheral _global_modules[];
 
 template<
         typename T,
@@ -853,7 +853,7 @@ template<
                 bool>::type = 0
 >
 module_peripheral& module() {
-    return _global_pwmss_modules[T::MODULE];
+    return _global_modules[T::MODULE];
 }
 #endif
 
