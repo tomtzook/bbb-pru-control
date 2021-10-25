@@ -74,6 +74,7 @@ void direct_pin::value(value_t value) {
             m_module_ctrl->setdataout |= m_mask;
             break;
     }
+    
 }
 
 }

@@ -25,7 +25,7 @@ using gpio3 = module_def<3, 0x481ae000>;
 
 #pragma pack(push, 1)
 
-struct gpio_module {
+struct gpio_data {
     volatile union {
         volatile uint32_t data;
         volatile struct {
@@ -107,17 +107,17 @@ class module_peripheral : public peripheral {
 public:
     static constexpr size_t MODULE_CTRL_SIZE = 0x1000;
 
-    using register_all = reg<0x0, gpio_module>;
+    using register_all = reg<0x0, gpio_data>;
 
     explicit module_peripheral(size_t address) noexcept;
     module_peripheral(const module_peripheral& other) = delete;
     ~module_peripheral() override = default;
 
-    volatile gpio_module* operator->() {
+    volatile gpio_data* operator->() {
         return peripheral::data<register_all>();
     }
 
-    const volatile gpio_module* operator->() const {
+    const volatile gpio_data* operator->() const {
         return peripheral::data<register_all>();
     }
 };
@@ -135,7 +135,7 @@ public:
     void value(value_t value);
 
 private:
-    volatile gpio_module* m_module_ctrl;
+    volatile gpio_data* m_module_ctrl;
     unsigned m_mask;
 };
 
