@@ -7,7 +7,10 @@
 namespace pru::rp {
 
 class channel_exception : std::exception {
-
+public:
+    virtual const char* what() const noexcept {
+        return "channel error";
+    }
 };
 
 class channel {

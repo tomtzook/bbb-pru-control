@@ -8,6 +8,8 @@ set(CMAKE_CXX_COMPILER "arm-linux-gnueabihf-g++")
 
 set(CMAKE_CXX_STANDARD 17)
 
+add_subdirectory(libelf)
+
 add_subdirectory(common)
 add_subdirectory(rp)
 add_subdirectory(uio)
@@ -21,4 +23,4 @@ add_executable(rp_host_test rp_main.cpp)
 target_link_libraries(rp_host_test PRIVATE prurp)
 
 add_executable(config_host_test config_main.cpp)
-target_link_libraries(config_host_test PRIVATE bbb_usermode prurp)
+target_link_libraries(config_host_test PRIVATE bbb_usermode prurp elf)

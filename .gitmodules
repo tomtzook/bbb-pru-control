@@ -1,3 +1,6 @@
 [submodule "uio/am335x_pru_package"]
 	path = uio/am335x_pru_package
 	url = https://github.com/beagleboard/am335x_pru_package.git
+[submodule "libelf"]
+	path = libelf
+	url = https://github.com/tomtzook/elf.git

@@ -3,6 +3,8 @@
 #include <sys/mman.h>
 
 #include <iostream>
+#include <fstream>
+#include <vector>
 
 #include <sysfs/gpio.h>
 #include <mem/gpio.h>
@@ -12,7 +14,8 @@
 #include <mem/control_module.h>
 #include <mem/pruss.h>
 
-#include <prurp.h>
+#include <elf.h>
+#include <cstring>
 
 
 static void test_led(bbb::gpio::pin& led) {
@@ -49,19 +52,6 @@ static void enable_pwm(bbb::pwmss::module_peripheral& module) {
     epwm->tbctl.data &= ~0x3;
 }
 
-static void run_pru(pru::rp::pru& pru) {
-    if (pru.is_running()) {
-        std::cout << "PRU is running. Stopping..." << std::endl;
-        pru.stop();
-    }
-
-    std::cout << "Upload software..." << std::endl;
-    pru.load_firmware("/tmp/pru_test");
-
-    std::cout << "Starting PRU..." << std::endl;
-    pru.start();
-}
-
 static void disable_pwm(bbb::pwmss::module_peripheral& module) {
     auto epwm = module.epwm();
 
@@ -69,6 +59,46 @@ static void disable_pwm(bbb::pwmss::module_peripheral& module) {
     epwm->aqctla.data = 0x1 | (0x3 << 4);
     epwm->aqctlb.data = 0x1 | (0x3 << 8);
     epwm->tbcnt = 0;
+}
+
+static void load_code_to_pru(bbb::pruss::pru& pru, const char* path) {
+    std::ifstream file(path, std::ios::binary | std::ios::ate);
+    file.seekg(0, std::ios::end);
+    size_t file_size = file.tellg();
+    file.seekg(0, std::ios::beg);
+    std::vector<char> buffer(file_size);
+    file.read(buffer.data(), file_size);
+
+    char code[1024] = {0};
+    size_t code_idx = 0;
+    char data[1024] = {0};
+    size_t data_idx = 0;
+
+    elf::image image(buffer.data());
+    for (auto program : image.programs()) {
+        if (program.flags().bits.execute) {
+            memcpy(code + code_idx, program.data<char>(), program.size());
+            code_idx += program.size();
+        } else if (program.flags().bits.read || program.flags().bits.write) {
+            memcpy(data + data_idx, program.data<char>(), program.size());
+            data_idx += program.size();
+        }
+    }
+
+    std::cout << "code" << std::endl;
+    for (int i = 0; i < code_idx; ++i) {
+        std::cout << "0x" << std::hex << (int)pru.iram<char>()[i] << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "data" << std::endl;
+    for (int i = 0; i < data_idx; ++i) {
+        std::cout << "0x" << std::hex << (int)pru.dram<char>()[i] << " ";
+    }
+    std::cout << std::endl;
+
+    memcpy((void*) pru.iram<char>(), code, code_idx);
+    memcpy((void*) pru.dram<char>(), data, data_idx);
 }
 
 static void print(bbb::pruss::module_peripheral& prumem) {
@@ -96,6 +126,11 @@ static void print(bbb::pruss::module_peripheral& prumem) {
     std::cout << std::endl;
 }
 
+struct message {
+    unsigned int count;
+    bool overflow;
+};
+
 int main() {
     //auto led = bbb::gpio::make_sysfs_pin<bbb::gpio::usr3>();
 
@@ -120,24 +155,17 @@ int main() {
     std::cout << "PWMSS0: " << std::endl << pwmss0 << std::endl;*/
 
     auto& prumem = bbb::pruss::module<bbb::pruss::pruicss>();
+    bbb::pruss::pru pru(prumem, 0);
 
-    pru::rp::pru pru(pru::rp::pru0);
-    if (pru.is_running()) {
-        pru.stop();
-    }
-    pru.load_firmware("/tmp/pru_test");
-    //pru.start();
+    pru.disable();
+    pru.load_from_elf("/tmp/pru_test");
+    pru.enable();
 
-    bbb::pruss::pru mpru(prumem, 0);
-    mpru.enable();
+    std::cout << "PRU loaded" << std::endl;
 
-    usleep(5000);
-    mpru.disable();
-    print(prumem);
-    usleep(500000);
-    print(prumem);
+    usleep(1000 * 1000 * 60);
 
-    pru.stop();
+    pru.disable();
 
     return 0;
 }

@@ -9,3 +9,4 @@ add_library(bbb_usermode STATIC
 target_include_directories(bbb_usermode PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_definitions(bbb_usermode PUBLIC MEM_GLOBAL_REGS=1)
+target_link_libraries(bbb_usermode elf)

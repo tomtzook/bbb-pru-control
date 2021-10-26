@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <cstddef>
+#include <string>
 
 #include "peripheral.h"
 
@@ -180,6 +181,8 @@ public:
 
     void enable();
     void disable();
+
+    void load_from_elf(const std::string& path);
 
 private:
     template<typename T, typename module_register>
