@@ -21,4 +21,4 @@ add_executable(rp_host_test rp_main.cpp)
 target_link_libraries(rp_host_test PRIVATE prurp)
 
 add_executable(config_host_test config_main.cpp)
-target_link_libraries(config_host_test PRIVATE bbb_usermode)
+target_link_libraries(config_host_test PRIVATE bbb_usermode prurp)

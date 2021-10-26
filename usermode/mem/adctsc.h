@@ -22,7 +22,7 @@ struct is_module_def : std::false_type {};
 template<unsigned module, size_t address>
 struct is_module_def<module_def<module, address>> : std::true_type {};
 
-using adctscss = module_def<0, 0x44E0D000>;
+using adctscss = module_def<0, 0x44e0d000>;
 
 #pragma pack(push, 1)
 

@@ -26,7 +26,21 @@ std::ostream& operator<<(std::ostream& os, const bbb::pwmss::module_peripheral& 
        << "\tx_major=0x" << std::hex << module_peripheral->revision.bits.x_major << std::endl
        << "\tr_rtl=0x" << std::hex << module_peripheral->revision.bits.r_rtl << std::endl
        << "\tfunc=0x" << std::hex << module_peripheral->revision.bits.func << std::endl
-       << "\tscheme=0x" << std::hex << module_peripheral->revision.bits.scheme;
+       << "\tscheme=0x" << std::hex << module_peripheral->revision.bits.scheme << std::endl;
+
+    os << "sysconfig:" << std::endl
+       << "\tsoftreset=0x" << std::hex << module_peripheral->sysconfig.bits.softreset << std::endl
+       << "\tfreeemu=0x" << std::hex << module_peripheral->sysconfig.bits.freeemu << std::endl
+       << "\tidle_mode=0x" << std::hex << module_peripheral->sysconfig.bits.idle_mode << std::endl
+       << "\tstandby_mode=0x" << std::hex << module_peripheral->sysconfig.bits.standby_mode << std::endl;
+
+    os << "clkstatus:" << std::endl
+       << "\tecap_clk_en_ack=0x" << std::hex << module_peripheral->clkstatus.bits.ecap_clk_en_ack << std::endl
+       << "\tecap_clkstop_ack=0x" << std::hex << module_peripheral->clkstatus.bits.ecap_clkstop_ack << std::endl
+       << "\teqep_clk_en_ack=0x" << std::hex << module_peripheral->clkstatus.bits.eqep_clk_en_ack << std::endl
+       << "\teqep_clkstop_ack=0x" << std::hex << module_peripheral->clkstatus.bits.eqep_clkstop_ack << std::endl
+       << "\tepwm_clk_en_ack=0x" << std::hex << module_peripheral->clkstatus.bits.epwm_clk_en_ack << std::endl
+       << "\tepwm_clkstop_ack=0x" << std::hex << module_peripheral->clkstatus.bits.epwm_clkstop_ack;
 
     return os;
 }
